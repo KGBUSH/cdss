@@ -28,6 +28,7 @@ output:
 
 
 """
+from config import PROJECT_PATH
 from utils.duration import Duration, duration_rules
 
 import jieba
@@ -134,5 +135,6 @@ def parse_dunhao_sentence(douhao_sentence):
 
 
 if __name__ == '__main__':
-    txt_path = '/Users/dengyang/PycharmProjects/cdss/data/main_complaint_segment.txt'
+    print(PROJECT_PATH)
+    txt_path = os.path.join(PROJECT_PATH, 'data/main_complaint_segment.txt')
     load_txt(txt_path=txt_path)
