@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 
 """
 duration提取
@@ -15,8 +16,21 @@ duration_rules = {
     '##m 小##a 时##ng': '小时'
 }
 
+prog = re.compile('([一二三四五六七八九十]|(([0-9]*)\.)?([0-9]*)(\+|余)?|半|多)?(个)?(月|天|小时|年|周|次)(半|余)?')
+
 
 class Duration(object):
+
+    @staticmethod
+    def get_duration_re(sentence):
+        words = sentence.split()
+        s = ''
+        for word in words:
+            s += word.split('##')[0]
+        duration = prog.search(s[:])
+        if duration is not None:
+            duration = duration.group()
+        return duration
 
     @staticmethod
     def get_duration(sentence):

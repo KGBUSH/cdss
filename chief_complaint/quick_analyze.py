@@ -31,11 +31,9 @@ output:
 from config import PROJECT_PATH
 from utils.duration import Duration, duration_rules
 
-import jieba
+#import jieba
 import os
-import numpy as np
-import pandas as pd
-from tqdm import tqdm
+
 
 
 def load_txt(txt_path):
@@ -44,10 +42,10 @@ def load_txt(txt_path):
     """
     # 1. 按行load文件
     lines_num = -1
-    with open(txt_path, 'r') as fr:
+    with open(txt_path, 'r', encoding='utf-8') as fr:
         lines_num = len(fr.readlines())
 
-    sample_f = open(txt_path, 'r')
+    sample_f = open(txt_path, 'r', encoding='utf-8')
     print("load samples from %s ... ..." % txt_path)
     for i in range(int(lines_num)):
         line = sample_f.readline()
@@ -105,14 +103,14 @@ def parse_douhao_sentence(index, douhao_sentence, results):
         # 没有顿号的情况下，应该只有一个症状
         words = douhao_sentence.split('##Symptom')
         symptom = words[0].split()[-1]
-        duration = Duration.get_duration(sentence=words[1])
+        duration = Duration.get_duration_re(sentence=words[1])
         results[index] = [{'symptom': symptom, 'duration': duration}]
     else:
         # 这个逗号句子没有Symptom
         symptom = None
         for j in range(index - 1, -1, -1):
             symptom = results[j][-1]['symptom']
-        duration = Duration.get_duration(sentence=douhao_sentence)
+        duration = Duration.get_duration_re(sentence=douhao_sentence)
         results[index] = [{'symptom': symptom, 'duration': duration}]
 
 
@@ -124,7 +122,7 @@ def parse_dunhao_sentence(douhao_sentence):
     """
     tmp_result = []  # [dict, dict]
     s_count = douhao_sentence.count('##Symptom')
-    duration = Duration.get_duration(sentence=douhao_sentence)
+    duration = Duration.get_duration_re(sentence=douhao_sentence)
     for item in douhao_sentence.split(' '):
         if '##Symptom' in item:
             symptom = item.split('##')[0]
