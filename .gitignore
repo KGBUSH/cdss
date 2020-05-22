@@ -1,0 +1,28 @@
+#忽略根目录下的所有文件
+*
+
+#忽略子目录下的所有文件
+/*
+
+#包含目录
+!*/
+
+#指定不忽略的文件
+# 1. 下载图片用的source csv
+#!/Utils_download/csv/*
+#!/Utils_download/csv/210_download/*
+#!/Utils_download/csv/logo/*
+#!/Utils_download/csv/mask/*
+#!/doc/*
+
+# 2. code
+!*.c
+!*.h
+!*.py
+!*.sql
+!*.md
+!requirements.txt
+
+
+# local 配置
+config/local.py
