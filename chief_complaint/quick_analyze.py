@@ -29,7 +29,7 @@ output:
 
 """
 from config import PROJECT_PATH
-from utils.duration import Duration, duration_rules
+from utils.duration import Duration
 
 #import jieba
 import os
