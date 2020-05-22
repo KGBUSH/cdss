@@ -34,7 +34,7 @@ from utils.duration import Duration, duration_rules
 #import jieba
 import os
 import collections
-
+import numpy as np
 
 def load_txt(txt_path):
     """
