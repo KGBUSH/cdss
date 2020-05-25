@@ -133,7 +133,7 @@ def parse_dunhao_sentence(douhao_sentence):
 
 
 if __name__ == '__main__':
-    print("test")
+    print("test1")
     print(PROJECT_PATH)
     txt_path = os.path.join(PROJECT_PATH, 'data/main_complaint_segment.txt')
     load_txt(txt_path=txt_path)
