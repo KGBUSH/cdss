@@ -103,15 +103,24 @@ def parse_douhao_sentence(index, douhao_sentence, results):
         # 没有顿号的情况下，应该只有一个症状
         words = douhao_sentence.split('##Symptom')
         symptom = words[0].split()[-1]
-        duration = Duration.get_duration_re(sentence=words[1])
-        results[index] = [{'symptom': symptom, 'duration': duration}]
+        duration = Duration.get_duration_re(sentence=douhao_sentence)
+        results[index] = [{'symptom': symptom,
+                           "target": '自身',
+                           'duration': duration}]
     else:
         # 这个逗号句子没有Symptom
         symptom = None
-        for j in range(index - 1, -1, -1):
-            symptom = results[j][-1]['symptom']
-        duration = Duration.get_duration_re(sentence=douhao_sentence)
-        results[index] = [{'symptom': symptom, 'duration': duration}]
+        tmp_result = []  # [dict, dict]
+        for j in range(index - 1, -1, -1):  # 如果逗号句子前面有多个Symptom,算多个症状
+            for k in range(len(results[j])):
+                if 'symptom' in results[j][k]:
+                    symptom = results[j][k]['symptom']
+                    duration = Duration.get_duration_re(sentence=douhao_sentence)
+                    tmp_result.append({'symptom': symptom,
+                                       "target": '自身',
+                                       'duration': duration})
+            break
+        results[index] = tmp_result
 
 
 def parse_dunhao_sentence(douhao_sentence):
@@ -133,7 +142,6 @@ def parse_dunhao_sentence(douhao_sentence):
 
 
 if __name__ == '__main__':
-    print("test1")
     print(PROJECT_PATH)
     txt_path = os.path.join(PROJECT_PATH, 'data/main_complaint_segment.txt')
     load_txt(txt_path=txt_path)

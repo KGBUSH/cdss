@@ -30,6 +30,9 @@ class Duration(object):
         duration = prog.search(s[:])
         if duration is not None:
             duration = duration.group()
+            if '余' in duration:
+                idx = duration.index('余')
+                duration = duration[:idx] + duration[idx + 1:] + '+'
         return duration
 
     @staticmethod
