@@ -31,10 +31,11 @@ output:
 from config import PROJECT_PATH
 from utils.duration import Duration
 
-#import jieba
+# import jieba
 import os
 import collections
 import numpy as np
+
 
 def load_txt(txt_path):
     """
@@ -56,9 +57,13 @@ def load_txt(txt_path):
         try:
             # line = '反复胸闷10余年,再发1月。\t反复##ext_freq 胸闷##Symptom 10##m 余年##m ,##x 再发##ext_freq 1##m 月##m 。##x'
             # line = '腹胀、纳差4天，胸闷1天\t腹胀##Symptom 、##x 纳差##Symptom 4##m 天##n ，##x 胸闷##Symptom 1##m 天##n'
+            # line = '反复胸闷40余年，再发伴头晕1周。	反复##ext_freq 胸闷##Symptom 40##m 余年##m ，##x 再发##ext_freq 伴##x 头晕##Symptom 1##m 周##nr 。##x'
+
+            # line = '反复胸闷、胸痛2月余，再发加重半天。	反复##ext_freq 胸闷##Symptom 、##x 胸痛##Symptom 2##m 月##m 余##m ，##x 再发##ext_freq 加重##ext_intensity 半天##m 。##x'
+            # line = '心肺复苏术后5小时。	心肺复苏术##Surgery 后##t 5##m 小##a 时##ng 。##x '
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
             results = parse_one_input(input=input)
-            print(origin, results)
+            print(origin, '\n\t', results)
         except:
             pass
 
@@ -71,7 +76,7 @@ def parse_one_input(input):
     """
     # split 句号
     all_results = []  # 所有句号句子
-    input_list = input.strip('。##x').split('。##x')  # 先把最后的句号删了，再split by 句号
+    input_list = input.strip().strip('。##x').split('。##x')  # 先把最后的句号删了，再split by 句号
 
     for sentence in input_list:  # 句号句子
         # 1. 初始化句号句子的result
@@ -92,35 +97,69 @@ def parse_douhao_sentence(index, douhao_sentence, results):
     """
 
     :param douhao_sentence: 逗号句子
+    :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
     :return:
     """
     # 1. 有顿号的逗号句子（一定有多个Symptom）
-    if '、##x' in douhao_sentence:
+    if '、##x' in douhao_sentence and '伴##x' not in douhao_sentence:
         results[index] = parse_dunhao_sentence(douhao_sentence=douhao_sentence)
 
-    # 2. 陈磊负责没有顿号
-    elif '##Symptom' in douhao_sentence:
+    # 2. 没有顿号
+    else:
+        results[index] = parse_without_dunhao_sentence(index=index,
+                                                       douhao_sentence=douhao_sentence,
+                                                       results=results)
+
+
+def parse_without_dunhao_sentence(index, douhao_sentence, results):
+    """
+    没有顿号：
+    1）有伴随
+    2）无伴随
+    :param douhao_sentence:
+    :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
+    :return:
+    """
+    # 1. 先找该逗号句子的主Symptom（可能多个）
+    result = []  # [dict, ..., dict]
+    duration = Duration.get_duration_re(sentence=douhao_sentence)
+
+    accom_before = douhao_sentence.split('伴##x')[0]
+    # 1.1 找到'伴'前面的主Symptom，可能没有就要往前找
+    if '##Symptom' in accom_before:
         # 没有顿号的情况下，应该只有一个症状
-        words = douhao_sentence.split('##Symptom')
+        words = accom_before.split('##Symptom')
         symptom = words[0].split()[-1]
-        duration = Duration.get_duration_re(sentence=douhao_sentence)
-        results[index] = [{'symptom': symptom,
-                           "target": '自身',
-                           'duration': duration}]
+        result.append({'symptom': symptom, 'duration': duration})  # TODO 要改
     else:
         # 这个逗号句子没有Symptom
-        symptom = None
-        tmp_result = []  # [dict, dict]
-        for j in range(index - 1, -1, -1):  # 如果逗号句子前面有多个Symptom,算多个症状
-            for k in range(len(results[j])):
-                if 'symptom' in results[j][k]:
-                    symptom = results[j][k]['symptom']
-                    duration = Duration.get_duration_re(sentence=douhao_sentence)
-                    tmp_result.append({'symptom': symptom,
-                                       "target": '自身',
-                                       'duration': duration})
-            break
-        results[index] = tmp_result
+        try:
+            for k in range(len(results[index - 1])):
+                symptom = results[index - 1][k]['symptom']
+                result.append({'symptom': symptom,
+                               "target": '自身',
+                               'duration': duration})
+        except (ValueError, KeyError) as e:
+            pass
+
+    # 2. 如果有伴随
+    if '伴##x' in douhao_sentence:
+        # 2.1 解析伴后面的内容，
+        accompany_sentence = douhao_sentence.split('伴##x')[-1]  # 伴后面的内容
+        accom_result = []
+        if '、##x' in accompany_sentence:
+            # 伴随症状至少两个
+            accom_result = parse_dunhao_sentence(douhao_sentence=accompany_sentence)
+        else:
+            # 只有一个伴随症状
+            words = douhao_sentence.split('##Symptom')
+            symptom = words[0].split()[-1]
+            accom_result.append({'symptom': symptom, 'duration': duration})
+        # 2.2 加入主Symptom
+        for item in result:
+            item.update({"accompany": accom_result})
+
+    return result
 
 
 def parse_dunhao_sentence(douhao_sentence):
@@ -144,4 +183,6 @@ def parse_dunhao_sentence(douhao_sentence):
 if __name__ == '__main__':
     print(PROJECT_PATH)
     txt_path = os.path.join(PROJECT_PATH, 'data/main_complaint_segment.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
+
     load_txt(txt_path=txt_path)
