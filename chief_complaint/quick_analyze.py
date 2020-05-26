@@ -30,6 +30,7 @@ output:
 """
 from config import PROJECT_PATH
 from utils.duration import Duration
+from utils.extension import Extension
 
 # import jieba
 import os
@@ -123,22 +124,29 @@ def parse_without_dunhao_sentence(index, douhao_sentence, results):
     # 1. 先找该逗号句子的主Symptom（可能多个）
     result = []  # [dict, ..., dict]
     duration = Duration.get_duration_re(sentence=douhao_sentence)
-
+    extension = Extension.get_extension(sentence=douhao_sentence)
     accom_before = douhao_sentence.split('伴##x')[0]
     # 1.1 找到'伴'前面的主Symptom，可能没有就要往前找
     if '##Symptom' in accom_before:
         # 没有顿号的情况下，应该只有一个症状
         words = accom_before.split('##Symptom')
         symptom = words[0].split()[-1]
-        result.append({'symptom': symptom, 'duration': duration})  # TODO 要改
+        tmp = {'symptom': symptom,
+               "target": '自身',
+               'duration': duration}
+        tmp.update(extension)
+        result.append(tmp)  # TODO 要改
+
     else:
         # 这个逗号句子没有Symptom
         try:
             for k in range(len(results[index - 1])):
                 symptom = results[index - 1][k]['symptom']
-                result.append({'symptom': symptom,
-                               "target": '自身',
-                               'duration': duration})
+                tmp = {'symptom': symptom,
+                       "target": '自身',
+                       'duration': duration}
+                tmp.update(extension)
+                result.append(tmp)
         except (ValueError, KeyError) as e:
             pass
 
@@ -146,6 +154,7 @@ def parse_without_dunhao_sentence(index, douhao_sentence, results):
     if '伴##x' in douhao_sentence:
         # 2.1 解析伴后面的内容，
         accompany_sentence = douhao_sentence.split('伴##x')[-1]  # 伴后面的内容
+        extension = Extension.get_extension(sentence=accompany_sentence)
         accom_result = []
         if '、##x' in accompany_sentence:
             # 伴随症状至少两个
@@ -154,7 +163,9 @@ def parse_without_dunhao_sentence(index, douhao_sentence, results):
             # 只有一个伴随症状
             words = douhao_sentence.split('##Symptom')
             symptom = words[0].split()[-1]
-            accom_result.append({'symptom': symptom, 'duration': duration})
+            tmp = {'symptom': symptom, 'duration': duration}
+            tmp.update(extension)
+            accom_result.append(tmp)
         # 2.2 加入主Symptom
         for item in result:
             item.update({"accompany": accom_result})
@@ -171,12 +182,15 @@ def parse_dunhao_sentence(douhao_sentence):
     tmp_result = []  # [dict, dict]
     s_count = douhao_sentence.count('##Symptom')
     duration = Duration.get_duration_re(sentence=douhao_sentence)
+    extension = Extension.get_extension(sentence=douhao_sentence)
     for item in douhao_sentence.split(' '):
         if '##Symptom' in item:
             symptom = item.split('##')[0]
-            tmp_result.append({"symptom": symptom,
-                               "target": '自身',
-                               "duration": duration})
+            tmp = {"symptom": symptom,
+                   "target": '自身',
+                   "duration": duration}
+            tmp.update(extension)
+            tmp_result.append(tmp)
     return tmp_result
 
 
