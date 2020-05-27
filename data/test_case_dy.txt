@@ -1,13 +1,15 @@
 反复胸闷10余年,再发1月。	反复##ext_freq 胸闷##Symptom 10##m 余年##m ,##x 再发##ext_freq 1##m 月##m 。##x
 腹胀、纳差4天，胸闷1天	腹胀##Symptom 、##x 纳差##Symptom 4##m 天##n ，##x 胸闷##Symptom 1##m 天##n
 反复胸闷40余年，再发伴头晕1周。	反复##ext_freq 胸闷##Symptom 40##m 余年##m ，##x 再发##ext_freq 伴##x 头晕##Symptom 1##m 周##nr 。##x
+反复胸闷40余年，再发伴头晕一周。	反复##ext_freq 胸闷##Symptom 40##m 余年##m ，##x 再发##ext_freq 伴##x 头晕##Symptom 一##m 周##nr 。##x
+
 反复胸闷、胸痛2月余，再发加重半天。	反复##ext_freq 胸闷##Symptom 、##x 胸痛##Symptom 2##m 月##m 余##m ，##x 再发##ext_freq 加重##ext_intensity 半天##m 。##x
 心肺复苏术后5小时。	心肺复苏术##Surgery 后##t 5##m 小##a 时##ng 。##x
 
 胸闷10天，加重伴气喘、低热5天。	胸闷##Symptom 10##m 天##n ，##x 加重##ext_intensity 伴##x 气喘##Symptom 、##x 低热##Symptom 5##m 天##n 。##x
 反复胸痛3月。伴咳嗽3天。反复胸痛3月，伴咳嗽3天。	反复##ext_freq 胸痛##Symptom 3##m 月##m 。##x 伴##x 咳嗽##Symptom 3##m 天##n 。##x 反复##ext_freq 胸痛##Symptom 3##m 月##m ，##x 伴##x 咳嗽##Symptom 3##m 天##n 。##x
 发作性意识障碍1月，伴恶心、呕吐1天。	发作性##ext_freq 意识障碍##Disease 1##m 月##m ，##x 伴##x 恶心##Symptom 、##x 呕吐##Symptom 1##m 天##n 。##x
-
+发作性意识障碍1月，伴恶心、呕吐一天。	发作性##ext_freq 意识障碍##Disease 1##m 月##m ，##x 伴##x 恶心##Symptom 、##x 呕吐##Symptom 1##m 天##n 。##x
 
 
 
