@@ -37,7 +37,6 @@ import os
 import collections
 import numpy as np
 
-
 def load_txt(txt_path):
     """
     e.g. /Users/dengyang/PycharmProjects/cdss/data/main_complaint_segment.txt
@@ -65,6 +64,7 @@ def load_txt(txt_path):
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
             results = parse_one_input(input=input)
             print(origin, '\n\t', results)
+
         except:
             pass
 
@@ -198,5 +198,4 @@ if __name__ == '__main__':
     print(PROJECT_PATH)
     txt_path = os.path.join(PROJECT_PATH, 'data/main_complaint_v2.txt')
     # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
-
     load_txt(txt_path=txt_path)
