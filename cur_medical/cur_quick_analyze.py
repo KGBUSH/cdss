@@ -1,46 +1,26 @@
-"""
-@time: 2020/5/22 13:10
-@desc: 快速迭代
-
-input的原句：腹胀、纳差4天，胸闷1天
-input: 腹胀##Symptom 、##x 纳差##Symptom 4##m 天##n ，##x 胸闷##Symptom 1##m 天##n
-output:
-{"symptom" : '腹胀', "target" : '自身', "duration" : '4天', "intensity" : '', "part" : '', "exist" : '有', "frequency" : '', "color" : '',
-    "property" : '', "pattern" : '', "type" : '', "scope" : '', "smell" : '', "accompany" : '',  "premise" : ''}
-{"symptom" : '纳差', "target" : '自身', "duration" : '4天', "intensity" : '', "part" : '', "exist" : '有', "frequency" : '', "color" : '',
-    "property" : '', "pattern" : '', "type" : '', "scope" : '', "smell" : '', "accompany" : ',  "premise" : '''}
-{"symptom" : '胸闷', "target" : '自身', "duration" : '1天', "intensity" : '', "part" : '', "exist" : '有', "frequency" : '', "color" : '',
-    "property" : '', "pattern" : '', "type" : '', "scope" : '', "smell" : '', "accompany" : '',  "premise" : ''}
-
-
-
-
-发现血压升高5年，血压控制不稳伴活动后气促2月。
-发现##v 血压升高##Symptom 5##m 年##m ，##x 血压##Labindex 控制##v 不稳##a 伴##v 活动后##ext_premise 气促##Symptom 2##m 月##m 。##x
-{"symptom" : '血压升高', "duration" : '5年', "intensity" : '', "part" : '', "exist" : '有', "frequency" : '', "color" : '',
-    "property" : '', "pattern" : '', "type" : '', "scope" : '', "smell" : '', "accompany" : '',  "premise" : ''}
-{"symptom" : '血压控制不稳', "target" : '自身', "duration" : '2月', "intensity" : '', "part" : '', "exist" : '有', "frequency" : '', "color" : '',
-    "property" : '', "pattern" : '', "type" : '', "scope" : '', "smell" : '',
-    "accompany" :
-        '{"symptom" : '活动后气促', "target" : '自身', "duration" : '2月', "intensity" : '', "part" : '', "exist" : '有', "frequency" : '', "color" : '',
-        "property" : '', "pattern" : '', "type" : '', "scope" : '', "smell" : '', "accompany" : '',  "premise" : ''}',  "premise" : ''}
-
-
+# -*- coding: utf-8 -*-
 
 """
+
+@file: cur_quick_analyze.py
+
+@time: 2020/5/28 14:02
+
+@desc: 把主诉那套quick_analyze.py的rules拿过来看看效果
+
+"""
+
+
 from config import PROJECT_PATH
 from utils.duration import Duration
 from utils.extension import Extension
 
-# import jieba
 import os
-import collections
-import numpy as np
 
 
 def load_txt(txt_path):
     """
-    e.g. /Users/dengyang/PycharmProjects/cdss/data/main_complaint_segment.txt
+    e.g. /Users/dengyang/PycharmProjects/cdss/data/cur_medical_segment.txt
     """
     # 1. 按行load文件
     lines_num = -1
@@ -50,21 +30,23 @@ def load_txt(txt_path):
     sample_f = open(txt_path, 'r', encoding='utf-8')
     print("load samples from %s ... ..." % txt_path)
     for i in range(int(lines_num)):
+        if i > 5:
+            break
         line = sample_f.readline()
         line = line.strip('\n').strip()
         line = line.replace(',', '，')
         if line == '':
             continue
         try:
-            # line = '反复胸闷10余年,再发1月。\t反复##ext_freq 胸闷##Symptom 10##m 余年##m ,##x 再发##ext_freq 1##m 月##m 。##x'
-            # line = '腹胀、纳差4天，胸闷1天\t腹胀##Symptom 、##x 纳差##Symptom 4##m 天##n ，##x 胸闷##Symptom 1##m 天##n'
-            # line = '反复胸闷40余年，再发伴头晕1周。	反复##ext_freq 胸闷##Symptom 40##m 余年##m ，##x 再发##ext_freq 伴##x 头晕##Symptom 1##m 周##nr 。##x'
-
-            # line = '反复胸闷、胸痛2月余，再发加重半天。	反复##ext_freq 胸闷##Symptom 、##x 胸痛##Symptom 2##m 月##m 余##m ，##x 再发##ext_freq 加重##ext_intensity 半天##m 。##x'
-            # line = '心肺复苏术后5小时。	心肺复苏术##Surgery 后##t 5##m 小##a 时##ng 。##x '
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
             results = parse_one_input(input=input)
-            print(origin, '\n\t', results)
+            print(i)
+            print(origin, '\n\t')
+            for k, item in enumerate(results):
+                print('第%d个句号句子:' % k)
+                for key, value in item.items():
+                    print('\t', key, value)
+            print('\n\n')
         except:
             pass
 
@@ -196,7 +178,6 @@ def parse_dunhao_sentence(douhao_sentence):
 
 if __name__ == '__main__':
     print(PROJECT_PATH)
-    txt_path = os.path.join(PROJECT_PATH, 'data/main_complaint_v2.txt')
-    # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/cur_medical_segment.txt')
 
     load_txt(txt_path=txt_path)

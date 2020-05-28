@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 import re
 
 """
@@ -11,16 +11,17 @@ class Extension(object):
     @staticmethod
     def get_extension(sentence):
 
-        intensity = sentence.split('##ext_intensity')[0].split()[-1] if '##ext_intensity' in sentence else ' '
-        part = sentence.split('##Bodypart')[0].split()[-1] if '##Bodypart' in sentence else ' '
+        invalid = ''
+        intensity = sentence.split('##ext_intensity')[0].split()[-1] if '##ext_intensity' in sentence else invalid
+        part = sentence.split('##Bodypart')[0].split()[-1] if '##Bodypart' in sentence else invalid
         exist = '有'
-        frequency = sentence.split('##ext_freq')[0].split()[-1] if '##ext_freq' in sentence else ' '
-        color = ' '  # 颜色
-        property_ = ' '  # 触感
-        pattern = ' '
-        type_ = ' '  # 病理
-        scope = ' '  # 范围
-        smell = ' '  # 味道
+        frequency = sentence.split('##ext_freq')[0].split()[-1] if '##ext_freq' in sentence else invalid
+        color = invalid  # 颜色
+        property_ = invalid  # 触感
+        pattern = invalid
+        type_ = invalid  # 病理
+        scope = invalid  # 范围
+        smell = invalid  # 味道
 
         return {'intensity': intensity,
                 'part': part,
