@@ -197,5 +197,5 @@ def parse_dunhao_sentence(douhao_sentence):
 if __name__ == '__main__':
     print(PROJECT_PATH)
     txt_path = os.path.join(PROJECT_PATH, 'data/main_complaint_v2.txt')
-    # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/badcase.txt')
     load_txt(txt_path=txt_path)

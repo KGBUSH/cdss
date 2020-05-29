@@ -18,8 +18,8 @@ class Extension(object):
         frequency = sentence.split('##ext_freq')[0].split()[-1] if '##ext_freq' in sentence else invalid
         color = invalid  # 颜色
         property_ = invalid  # 触感
-        pattern = invalid
-        type_ = invalid  # 病理
+        premise = sentence.split('##ext_premise')[0].split()[-1] if '##ext_premise' in sentence else invalid
+
         scope = invalid  # 范围
         smell = invalid  # 味道
 
@@ -29,7 +29,6 @@ class Extension(object):
                 'frequency': frequency,
                 'color': color,
                 'property': property_,
-                'pattern': pattern,
-                'type': type_,
+                'premise': premise,
                 'scope': scope,
                 'smell': smell}
