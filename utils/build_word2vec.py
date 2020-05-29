@@ -33,6 +33,7 @@ def _load_corpus(txt_path):
 
 
 def _parse_one_sent(sent):
+
     if '小##a 时##ng' in sent:
         sent = sent.replace('小##a 时##ng', '小时##m')
 
