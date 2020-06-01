@@ -1,0 +1,1 @@
+咳嗽、头晕伴恶心、呕吐半天。	咳嗽##Symptom 、##x 头晕##Symptom 伴##x 恶心##Symptom 、##x 呕吐##Symptom 半天##m 。##x

@@ -10,7 +10,6 @@
 
 """
 
-
 from config import PROJECT_PATH
 from utils.duration import Duration
 from utils.extension import Extension
@@ -33,6 +32,9 @@ def load_txt(txt_path):
         if i > 5:
             break
         line = sample_f.readline()
+
+        line = '缘患者于10余年前出现头晕，主要以头顶部不适感为主，不伴眩晕，不伴视物模糊，不伴肢体乏力，	 缘##n 患者##n 于##p 10##m 余年##m 前##f 出现##v 头晕##Symptom ，##x 主要##b 以##p 头顶##Disease 部##x 不适##Symptom 感为##v 主##b ，##x 不##d 伴##v 眩晕##Symptom ，##x 不##d 伴##v 视物模糊##Symptom ，##x 不##d 伴##v 肢体##Bodypart 乏力##Symptom '
+
         line = line.strip('\n').strip()
         line = line.replace(',', '，')
         if line == '':
@@ -78,52 +80,92 @@ def parse_one_input(input):
 
 def parse_douhao_sentence(index, douhao_sentence, results):
     """
-
+    逗号句子总入口
+    :param index: 这是这个句号句子里面的第几个逗号句子
     :param douhao_sentence: 逗号句子
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
     :return:
     """
-    # 1. 有顿号的逗号句子（一定有多个Symptom）
-    if '、##x' in douhao_sentence and '伴##x' not in douhao_sentence:
-        results[index] = parse_dunhao_sentence(douhao_sentence=douhao_sentence)
+    # 1. 有顿号的逗号句子（一定有多个Symptom），且没有伴
+    # if '、##x' in douhao_sentence and '伴##x' not in douhao_sentence:
+    #     results[index] = parse_dunhao_sentence(douhao_sentence=douhao_sentence)
+
+    if douhao_sentence.strip().startswith('不##d 伴##v'):  # 现病史里面的场景
+        results[index] = []  # 内容都写到了上一个逗号句子里了
+        parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results)
 
     # 2. 没有顿号
     else:
-        results[index] = parse_without_dunhao_sentence(index=index,
+        results[index] = parse_general_douhao_sentence(index=index,
                                                        douhao_sentence=douhao_sentence,
                                                        results=results)
 
 
-def parse_without_dunhao_sentence(index, douhao_sentence, results):
+def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results):
     """
-    没有顿号：
+    逗号句子以`不伴`开头：
+    e.g. 不伴有气促、头晕，
+         不伴有冷汗，
+    :param index:
+    :param douhao_sentence:
+    :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
+    :return:
+    """
+    after_sentence = douhao_sentence.split('不##d 伴##v')[-1]
+    # 有没有顿号，区分开
+    if '、##x' in after_sentence:
+        accom_result = parse_dunhao_sentence(douhao_sentence=after_sentence)  # 这里可能提取不到时间
+    else:
+        accom_result = parse_general_douhao_sentence(index=index, douhao_sentence=after_sentence, results=results)
+
+    # 1. 返回的是个[dict, dict], 要迭代把里面的exist全部改成'无'
+    for item in accom_result:
+        item['exist'] = '无'
+
+    # 2. 对上一个逗号句子的每一个Symptom添加伴随
+    for i in range(index - 1, -1, -1):
+        if len(results[i]) == 0:
+            continue
+        else:
+            for item in results[i]:
+                if 'accompany' in item.keys() and item['accompany']:
+                    item['accompany'].extend(accom_result)
+                else:
+                    item['accompany'] = accom_result
+            break
+
+
+def parse_general_douhao_sentence(index, douhao_sentence, results):
+    """
     1）有伴随
     2）无伴随
     :param douhao_sentence:
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
-    :return:
+    :return: new 了一个句号句子的result[], 返回
     """
     # 1. 先找该逗号句子的主Symptom（可能多个）
     result = []  # [dict, ..., dict]
     duration = Duration.get_duration_re(sentence=douhao_sentence)
     extension = Extension.get_extension(sentence=douhao_sentence)
-    accom_before = douhao_sentence.split('伴##x')[0]
+    accom_before = douhao_sentence.split('伴##x')[0]  # 如果没有'伴##x' 也ok
     # 1.1 找到'伴'前面的主Symptom，可能没有就要往前找
     if '##Symptom' in accom_before:
-        # 没有顿号的情况下，应该只有一个症状
-        words = accom_before.split('##Symptom')
-        symptom = words[0].split()[-1]
-        tmp = {'symptom': symptom,
-               "target": '自身',
-               'duration': duration}
-        tmp.update(extension)
-        result.append(tmp)  # TODO 要改
+        # # 没有顿号的情况下，应该只有一个症状
+        # words = accom_before.split('##Symptom')
+        # symptom = words[0].split()[-1]
+        # tmp = {'symptom': symptom,
+        #        "target": '自身',
+        #        'duration': duration}
+        # tmp.update(extension)
+        # result.append(tmp)  # TODO 要改
+
+        result = parse_dunhao_sentence(douhao_sentence=accom_before)
 
     else:
         # 这个逗号句子没有Symptom
         try:
             for k in range(len(results[index - 1])):
-                symptom = results[index - 1][k]['symptom']
+                symptom = results[index - 1][k]['symptom']  # k 代表之前那句话有多少个Symptom
                 tmp = {'symptom': symptom,
                        "target": '自身',
                        'duration': duration}
@@ -143,7 +185,7 @@ def parse_without_dunhao_sentence(index, douhao_sentence, results):
             accom_result = parse_dunhao_sentence(douhao_sentence=accompany_sentence)
         else:
             # 只有一个伴随症状
-            words = douhao_sentence.split('##Symptom')
+            words = accompany_sentence.split('##Symptom')
             symptom = words[0].split()[-1]
             tmp = {'symptom': symptom, 'duration': duration}
             tmp.update(extension)
