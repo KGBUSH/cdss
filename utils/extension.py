@@ -9,12 +9,12 @@ import re
 class Extension(object):
 
     @staticmethod
-    def get_extension(sentence):
+    def get_extension(sentence):  # TODO 应该把accompany加上
 
         invalid = ''
         intensity = sentence.split('##ext_intensity')[0].split()[-1] if '##ext_intensity' in sentence else invalid
         part = sentence.split('##Bodypart')[0].split()[-1] if '##Bodypart' in sentence else invalid
-        exist = '有'
+        exist = '无' if '无##x' in sentence else '有'
         frequency = sentence.split('##ext_freq')[0].split()[-1] if '##ext_freq' in sentence else invalid
         color = invalid  # 颜色
         property_ = invalid  # 触感
