@@ -1,0 +1,20 @@
+胸痛30分钟。	胸痛##Symptom 30##m 分钟##q 。##x
+反复心悸10天，晕厥1次。	反复##ext_freq 心悸##Symptom 10##m 天##n ，##x 晕厥##Symptom 1##m 次##t 。##x
+胸痛2月，伴胸闷心悸1月，加重1周	胸痛##Symptom 2##m 月##m ，##x 伴##x 胸闷##Symptom 心悸##Symptom 1##m 月##m ，##x 加重##ext_intensity 1##m 周##nr
+活动后气促，双下肢水肿1月，。	活动后##ext_premise 气促##Symptom ，##x 双下肢##Bodypart 水肿##Symptom 1##m 月##m ，##x 。##x
+剑突下闷痛12小时	剑突##Bodypart 下##x 闷痛##ext_texture 12##m 小##a 时##ng
+
+
+发现心肌病22年，乏力1年余	发现##v 心肌病##Disease 22##m 年##m ，##x 乏力##Symptom 1##m 年##m 余##m
+发现冠心病3年，再发胸闷10天。	发现##v 冠心病##Disease 3##m 年##m ，##x 再发##ext_freq 胸闷##Symptom 10##m 天##n 。##x
+胸痛5天。左侧面部麻木2年，胸痛5天。	胸痛##Symptom 5##m 天##n 。##x 左侧##Disease 面部麻木##Symptom 2##m 年##m ，##x 胸痛##Symptom 5##m 天##n 。##x
+胸痛11天，左侧肢体乏力10天。	胸痛##Symptom 11##m 天##n ，##x 左侧##Disease 肢体##Bodypart 乏力##Symptom 10##m 天##n 。##x
+主动脉夹层术后3年，上腹部疼痛2周	主动脉夹层##Disease 术后##t 3##m 年##m ，##x 上腹部##Bodypart 疼痛##Symptom 2##m 周##nr
+胸痛半年，发现心尖部血栓1天	胸痛##Symptom 半年##m ，##x 发现##v 心尖部血栓##Disease 1##m 天##n
+发现冠心病1年余，胸闷2月，加重1天	发现##v 冠心病##Disease 1##m 年##m 余##m ，##x 胸闷##Symptom 2##m 月##m ，##x 加重##ext_intensity 1##m 天##n
+活动后胸闷、气促8月余，发现全心扩大1天。	活动后##ext_premise 胸闷##Symptom 、##x 气促##Symptom 8##m 月##m 余##m ，##x 发现##v 全心扩大##Disease 1##m 天##n 。##x
+
+
+反复心悸伴视物黑矇8月	反复##ext_freq 心悸##Symptom 伴视##v 物##n 黑矇##Disease 8##m 月##m
+体检发现高血压23年发现血压升高23年。	体检##v 发现##v 高血压##Disease 23##m 年##m 发现##v 血压升高##Symptom 23##m 年##m 。##x
+反复心悸伴视物黑矇8月	反复##ext_freq 心悸##Symptom 伴视##v 物##n 黑矇##Disease 8##m 月##m
