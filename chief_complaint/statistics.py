@@ -99,6 +99,9 @@ def statistics_efficient_percent(txt_path):
             pass
     print('汇总：', count_cut_word, count_valid, float(count_valid) / count_cut_word)
     counter_useless = Counter(list_useless).most_common()
+    # print(counter_useless)
+    for i, item in enumerate(counter_useless):
+        print(i, item)
 
 
 if __name__ == '__main__':

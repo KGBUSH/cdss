@@ -1,0 +1,7 @@
+咳嗽、头晕伴恶心、呕吐半天。	咳嗽##Symptom 、##x 头晕##Symptom 伴##x 恶心##Symptom 、##x 呕吐##Symptom 半天##m 。##x
+
+
+胸痛伴心悸3天。	胸痛伴心悸3天。	胸痛##Symptom 伴##x 心悸##Symptom 3##m 天##n 。##x
+
+
+胸痛2月，伴胸闷心悸1月，加重1周	胸痛##Symptom 2##m 月##m ，##x 伴##x 胸闷##Symptom 心悸##Symptom 1##m 月##m ，##x 加重##ext_intensity 1##m 周##nr

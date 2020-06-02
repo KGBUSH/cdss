@@ -1,0 +1,93 @@
+﻿患者8小时前大运动量之后出现胸骨后闷痛，呈重物压迫感，中至重度不适，持续10分钟后逐渐缓解。
+无大汗，无头晕、黑曚，无恶心、呕吐。
+之后胸闷反复发作，部位、程度同前，含服速效救心丸仅短暂缓解。
+就诊于香港大学深圳医院，完善心电图提示ST-T改变，考虑“急性冠脉综合征”，予阿司匹林氯比格雷负荷量、护胃等治疗。
+现为进一步诊治转入我院。
+患者病来无胸背部撕裂样疼痛，无咳血、咳粉红色泡沫痰，无黑曚、晕厥，近期患者精神、食欲、睡眠尚可，二便正常，体重无明显变化。
+	
+患者##n 8##m 小##a 时##ng 前##f 大##a 运动量##n 之后##f 出现##v 胸骨##Bodypart 后##x 闷痛##ext_texture ，##x 
+呈##v 重物##n 压迫##d 感##v ，##x 中至##ns 重度##ext_intensity 不适##Symptom ，##x 
+持续##vd 10##m 分钟##m 后##f 逐渐##d 缓解##v 。##x 
+
+无##x 大汗##Symptom ，##x 无##x 头晕##Symptom 、##x 黑##a 曚##zg ，##x 无##x 恶心##Symptom 、##x 呕吐##Symptom 。##x 
+
+之后##f 胸闷##Symptom 反复发作##ext_freq ，##x 部位##Disease 、##x 程度##n 同前##f ，##x 
+含服##n 速效救心丸##Medicine 仅##d 短##a 暂缓##d 解##v 。##x 
+
+就##d 诊于##v 香港大学##nt 深圳医院##nt ，##x 完善##v 心电图##Surgery 提示##v ST##eng -##x T##eng 改变##v ，##x 
+考虑##v “##x 急性冠脉综合征##Disease ”##x ，##x 
+予##x 阿司匹林##Medicine 氯##Device 比格雷##nr 负##v 荷量##n 、##x 护胃##n 等##u 治疗##v 。##x 
+现为##v 进一步##d 诊治##v 转入##v 我院##n 。##x 
+
+患者##n 病来##v 无##v 胸背部##Bodypart 撕裂样##ext_texture 疼痛##Symptom ，##x 
+无##x 咳血##Symptom 、##x 咳粉##nz 红色##n 泡沫##ext_texture 痰##x ，##x 无##v 黑##a 曚##zg 、##x 晕厥##Symptom ，##x 
+近期##t 患者##n 精神##n 、##x 食欲##n 、##x 睡眠##v 尚##d 可##v ，##x 
+二##m 便##d 正常##a ，##x 体重##n 无##v 明显##a 变化##vn 。##x 
+
+
+
+
+
+缘患者1年余前开始无明显诱因出现心悸，觉心跳加速，严重时伴胸闷、乏力、头晕，
+无黑朦、晕厥，无大汗、濒死感，症状反复发作，大口呼吸后可逐渐缓解，遂于我院门诊就诊，
+心电图示“频发室性早搏”，予“曲美他嗪、美托洛尔缓释片”治疗，症状稍好转，现为进一步治疗入住我科。
+
+患者此次起病以来无发热、畏寒，无头痛、乏力、肢体活动障碍，无活动后胸闷、胸痛、呼吸困难，
+无胸背部撕裂样疼痛、间歇性跛行，无咳嗽、咯痰，无夜间阵发性呼吸困难、咯粉红色泡沫痰，
+无腹胀、腹泻、黑便，大小便通畅，精神、睡眠、胃纳尚可，近期体重无明显下降。	
+
+
+缘##n 患者##n 1##m 年##m 余##m 前##f 开始##v 无##v 明显##a 诱因##n 出现##v 心悸##Symptom ，##x 
+觉##x 心跳加速##Symptom ，##x 严重##a 时伴##n 胸闷##Symptom 、##x 乏力##Symptom 、##x 头晕##Symptom ，##x 
+无##x 黑朦##Symptom 、##x 晕厥##Symptom ，##x 无##x 大汗##Symptom 、##x 濒死感##Symptom ，##x 
+症状##n 反复发作##ext_freq ，##x 大口呼吸##Symptom 后##f 可##v 逐渐##d 缓解##v ，##x 
+遂##d 于##p 我##r 院门##n 诊##vg 就##d 诊##v ，##x 心电图##Surgery 示##x “##x 频发##ext_freq 室性早搏##Disease ”##x ，##x 
+予##x “##x 曲美他嗪##Medicine 、##x 美托洛尔##Medicine 缓释##v 片##q ”##x 治疗##v ，##x 
+症状##n 稍好##d 转##v ，##x 现为##v 进一步##d 治疗##v 入住##v 我##r 科##n 。##x 
+
+
+{""symptom"" : '心悸', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '',
+ ""accompany"" :
+ 		'{""symptom"" : '胸闷', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '反复', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+		{""symptom"" : '乏力', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '反复', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+		{""symptom"" : '头晕', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '反复', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+		{""symptom"" : '黑朦', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""par" : '', ""exist"" : '无', ""frequency"" : '反复', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '晕厥', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '反复', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '大汗', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '反复', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '濒死感', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '反复', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}',  ""premise"" : '无明显诱因'}
+{""symptom"" : '心跳加速', ""target"" : '自身'，""duration"" : '1年余', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '频发室性早搏', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}"
+
+
+
+患者##n 此次##r 起病##v 以来##f 无##v 发热##Symptom 、##x 畏寒##Symptom ，##x 
+无##x 头痛##Symptom 、##x 乏力##Symptom 、##x 肢体##Bodypart 活动障碍##Symptom ，##x 
+无##x 活动后##ext_premise 胸闷##Symptom 、##x 胸痛##Symptom 、##x 呼吸困难##Symptom ，##x 
+无##x 胸背部##Bodypart 撕裂样##ext_texture 疼痛##Symptom 、##x 间歇性##ext_freq 跛行##Symptom ，##x 
+无##x 咳嗽##Symptom 、##x 咯痰##Symptom ，##x 
+无##x 夜间##ext_premise 阵发性##ext_freq 呼吸困难##Symptom 、##x 咯##v 粉##n 红色##n 泡沫##ext_texture 痰##x ，##x 
+无##x 腹胀##Symptom 、##x 腹泻##Symptom 、##x 黑便##Symptom ，##x 
+大##a 小##a 便##d 通畅##a ，##x 精神##n 、##x 睡眠##v 、##x 胃纳##nz 尚##d 可##v ，##x 近期##t 体重##n 无##v 明显##a 下降##v 。##x 
+
+{""symptom"" : '发热', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '畏寒', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '头痛', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '乏力', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '活动障碍', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '肢体', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '胸闷', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : '活动后'}
+{""symptom"" : '胸痛', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '呼吸困难', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '疼痛', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '胸背部', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '撕裂样', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '跛行', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '间歇性', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '咳嗽', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '咯痰', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '呼吸困难', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '阵发性', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : '夜间'}
+{""symptom"" : '泡沫痰', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '粉红色', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '腹胀', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '腹泻', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '黑便', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '无', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '大小便通畅', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '精神尚可', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '睡眠尚可', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '胃纳尚可', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}
+{""symptom"" : '体重无明显下降', ""target"" : '自身'，""duration"" : '', ""intensity"" : '', ""part"" : '', ""exist"" : '有', ""frequency"" : '', ""color"" : '', ""property"" : '', ""scope"" : '', ""smell"" : '', ""accompany"" : '',  ""premise"" : ''}"
