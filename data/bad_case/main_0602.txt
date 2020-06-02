@@ -1,0 +1,3 @@
+胸痛2月，伴胸闷心悸1月，加重1周	胸痛##Symptom 2##m 月##m ，##x 伴##x 胸闷##Symptom 心悸##Symptom 1##m 月##m ，##x 加重##ext_intensity 1##m 周##nr
+
+活动后气促，双下肢水肿1月，。	活动后##ext_premise 气促##Symptom ，##x 双下肢##Bodypart 水肿##Symptom 1##m 月##m ，##x 。##x

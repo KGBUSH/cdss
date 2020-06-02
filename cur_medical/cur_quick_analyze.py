@@ -13,6 +13,8 @@
 from config import PROJECT_PATH
 from utils.duration import Duration
 from utils.extension import Extension
+from utils.visualize import View
+from utils.grammar import is_begin_with_no_accompany
 
 import os
 
@@ -29,11 +31,9 @@ def load_txt(txt_path):
     sample_f = open(txt_path, 'r', encoding='utf-8')
     print("load samples from %s ... ..." % txt_path)
     for i in range(int(lines_num)):
-        if i > 5:
-            break
         line = sample_f.readline()
 
-        line = '缘患者于10余年前出现头晕，主要以头顶部不适感为主，不伴眩晕，不伴视物模糊，不伴肢体乏力，	 缘##n 患者##n 于##p 10##m 余年##m 前##f 出现##v 头晕##Symptom ，##x 主要##b 以##p 头顶##Disease 部##x 不适##Symptom 感为##v 主##b ，##x 不##d 伴##v 眩晕##Symptom ，##x 不##d 伴##v 视物模糊##Symptom ，##x 不##d 伴##v 肢体##Bodypart 乏力##Symptom '
+        # line = '缘患者于10余年前出现头晕，主要以头顶部不适感为主，不伴眩晕，不伴视物模糊，不伴肢体乏力，	 缘##n 患者##n 于##p 10##m 余年##m 前##f 出现##v 头晕##Symptom ，##x 主要##b 以##p 头顶##Disease 部##x 不适##Symptom 感为##v 主##b ，##x 不##d 伴##v 眩晕##Symptom ，##x 不##d 伴##v 视物模糊##Symptom ，##x 不##d 伴##v 肢体##Bodypart 乏力##Symptom '
 
         line = line.strip('\n').strip()
         line = line.replace(',', '，')
@@ -41,14 +41,15 @@ def load_txt(txt_path):
             continue
         try:
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
-            results = parse_one_input(input=input)
-            print(i)
-            print(origin, '\n\t')
-            for k, item in enumerate(results):
-                print('第%d个句号句子:' % k)
-                for key, value in item.items():
-                    print('\t', key, value)
-            print('\n\n')
+            all_results = parse_one_input(input=input)
+            # print(i)
+            # print(origin, '\n\t')
+            # for k, item in enumerate(all_results):
+            #     print('第%d个句号句子:' % k)
+            #     for key, value in item.items():
+            #         print('\t', key, value)
+            # print('\n\n')
+            View.visualize(origin, all_results)
         except:
             pass
 
@@ -90,7 +91,7 @@ def parse_douhao_sentence(index, douhao_sentence, results):
     # if '、##x' in douhao_sentence and '伴##x' not in douhao_sentence:
     #     results[index] = parse_dunhao_sentence(douhao_sentence=douhao_sentence)
 
-    if douhao_sentence.strip().startswith('不##d 伴##v'):  # 现病史里面的场景
+    if is_begin_with_no_accompany(sentence=douhao_sentence):  # 现病史里面的场景
         results[index] = []  # 内容都写到了上一个逗号句子里了
         parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results)
 
@@ -160,6 +161,9 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
         # result.append(tmp)  # TODO 要改
 
         result = parse_dunhao_sentence(douhao_sentence=accom_before)
+        for dict_ in result:
+            if not dict_['duration']:
+                dict_['duration'] = duration
 
     else:
         # 这个逗号句子没有Symptom
@@ -180,7 +184,7 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
         accompany_sentence = douhao_sentence.split('伴##x')[-1]  # 伴后面的内容
         extension = Extension.get_extension(sentence=accompany_sentence)
         accom_result = []
-        if '、##x' in accompany_sentence:
+        if '、##x' in accompany_sentence or accompany_sentence.count('##Symptom') > 1:
             # 伴随症状至少两个
             accom_result = parse_dunhao_sentence(douhao_sentence=accompany_sentence)
         else:
@@ -221,5 +225,6 @@ def parse_dunhao_sentence(douhao_sentence):
 if __name__ == '__main__':
     print(PROJECT_PATH)
     txt_path = os.path.join(PROJECT_PATH, 'data/cur_medical_segment.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/test_case/cur_medical_segment_test_cl_0601.txt')
 
     load_txt(txt_path=txt_path)

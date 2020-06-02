@@ -21,6 +21,8 @@
 !*.py
 !*.sql
 !*.md
+!*.txt
+!*.dict
 !requirements.txt
 
 

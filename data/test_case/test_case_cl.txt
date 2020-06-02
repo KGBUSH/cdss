@@ -1,0 +1,9 @@
+反复心悸、乏力6个月，支架术后2月。	反复##ext_freq 心悸##Symptom 、##x 乏力##Symptom 6##m 个##m 月##m ，##x 支架术##Surgery 后##t 2##m 月##m 。##x
+活动后胸闷心悸5天。	活动后##ext_premise 胸闷##Symptom 心悸##Symptom 5##m 天##n 。##x
+心悸1月余	心悸##Symptom 1##m 月##m 余##m
+胸痛1周，再发半天。	胸痛##Symptom 1##m 周##nr ，##x 再发##ext_freq 半天##m 。##x
+胸痛5余小时。	胸痛##Symptom 5##m 余##m 小##a 时##ng 。##x
+发现血压升高2个月。	发现##v 血压升高##Symptom 2##m 个##m 月##m 。##x
+反复气促并双下肢水肿1周。	反复##ext_freq 气促##Symptom 并##x 双下肢##Bodypart 水肿##Symptom 1##m 周##nr 。##x
+反复心悸、头晕8年，再发2年。	反复##ext_freq 心悸##Symptom 、##x 头晕##Symptom 8##m 年##m ，##x 再发##ext_freq 2##m 年##m 。##x
+胸痛4小时余。	胸痛##Symptom 4##m 小##a 时##ng 余##m 。##x

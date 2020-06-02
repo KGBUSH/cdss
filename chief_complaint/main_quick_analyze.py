@@ -147,6 +147,9 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
         # result.append(tmp)  # TODO 要改
 
         result = parse_dunhao_sentence(douhao_sentence=accom_before)
+        for dict_ in result:
+            if not dict_['duration']:
+                dict_['duration'] = duration
 
     else:
         # 这个逗号句子没有Symptom
@@ -167,7 +170,7 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
         accompany_sentence = douhao_sentence.split('伴##x')[-1]  # 伴后面的内容
         extension = Extension.get_extension(sentence=accompany_sentence)
         accom_result = []
-        if '、##x' in accompany_sentence:
+        if '、##x' in accompany_sentence or accompany_sentence.count('##Symptom') > 1:
             # 伴随症状至少两个
             accom_result = parse_dunhao_sentence(douhao_sentence=accompany_sentence)
         else:
@@ -215,6 +218,10 @@ def parse_dunhao_sentence(douhao_sentence):
 
 if __name__ == '__main__':
     print(PROJECT_PATH)
-    txt_path = os.path.join(PROJECT_PATH, 'data/badcase_main_0602.txt')
+
+    txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/main_0602.txt')
+    # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
+
+    # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
 
     load_txt(txt_path=txt_path)
