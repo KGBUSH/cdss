@@ -31,13 +31,12 @@ output:
 from config import PROJECT_PATH
 from utils.duration import Duration
 from utils.extension import Extension
-from utils.basic import print_paragraph_result
 from utils.visualize import View
 
-# import jieba
 import os
-import collections
-import numpy as np
+import re
+
+prog_zaifa = re.compile('[^，]再发')
 
 def load_txt(txt_path):
     """
@@ -66,13 +65,11 @@ def load_txt(txt_path):
             # line = '四肢乏力伴精神行为异常1天。	四肢##Bodypart 乏力##Symptom 伴##x 精神行为异常##Symptom 1##m 天##n 。##x'
             # line = '胸痛伴心悸3天。	胸痛##Symptom 伴##x 心悸##Symptom 3##m 天##n 。##x '
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
+            if prog_zaifa.search(origin) is not None:
+                input = input.replace('再发##ext_freq', '，##x 再发##ext_freq')
             all_results = parse_one_input(input=input)
-            # print(origin, '\n\t', all_results)
 
-            # print(origin)
-            # print_paragraph_result(paragraph_list=all_results)
-
-            View.visualize(origin, all_results)
+            View.visualize(origin, all_results, mode='non-void')
 
 
         except:
@@ -139,7 +136,7 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
     extension = Extension.get_extension(sentence=douhao_sentence)
     accom_before = douhao_sentence.split('伴##x')[0]  # 如果没有'伴##x' 也ok
     # 1.1 找到'伴'前面的主Symptom，可能没有就要往前找
-    if '##Symptom' in accom_before:
+    if '##Symptom' in accom_before or '##Disease' in accom_before:
         # # 没有顿号的情况下，应该只有一个症状
         # words = accom_before.split('##Symptom')
         # symptom = words[0].split()[-1]
@@ -205,15 +202,19 @@ def parse_dunhao_sentence(douhao_sentence):
                    "duration": duration}
             tmp.update(extension)
             tmp_result.append(tmp)
+
+        if '##Disease' in item:
+            disease = item.split('##')[0]
+            tmp = {"disease": disease,
+                   "target": '自身',
+                   "duration": duration}
+            tmp_result.append(tmp)
+
     return tmp_result
 
 
 if __name__ == '__main__':
     print(PROJECT_PATH)
-
-    # txt_path = os.path.join(PROJECT_PATH, 'data/badcase_main_0601.txt')
-    txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
-
-    # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/badcase_main_0602.txt')
 
     load_txt(txt_path=txt_path)
