@@ -2,7 +2,7 @@
 
 """
 
-@file: statistics.py
+@file: cur_statistics.py
 
 @time: 2020/5/28 14:52
 
@@ -14,7 +14,7 @@
 
 from config import PROJECT_PATH
 import os
-from chief_complaint.main_quick_analyze import parse_one_input
+from cur_medical.cur_quick_analyze import parse_one_input
 
 from collections import Counter
 
@@ -109,4 +109,8 @@ if __name__ == '__main__':
     txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_v2.txt')
     # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
 
-    statistics_efficient_percent(txt_path=txt_path)
+    # statistics_efficient_percent(txt_path=txt_path)
+
+    # 钟博的那种格式
+    from chief_complaint.main_statistics import statistics_efficient_percent_format
+    statistics_efficient_percent_format(txt_path=txt_path)

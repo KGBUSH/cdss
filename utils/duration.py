@@ -34,6 +34,11 @@ class Duration(object):
 
     @staticmethod
     def get_duration_re(sentence):
+        """
+        如果没有duration 返回None
+        :param sentence:
+        :return:
+        """
         words = sentence.split()
         s = ''
         for word in words:
