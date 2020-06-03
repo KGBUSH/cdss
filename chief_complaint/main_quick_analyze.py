@@ -53,25 +53,16 @@ def load_txt(txt_path):
         line = sample_f.readline()
         line = line.strip('\n').strip()
         line = line.replace(',', '，')
+        line = line.replace('；', '。')
         if line == '':
             continue
         try:
-            # line = '反复胸闷10余年,再发1月。\t反复##ext_freq 胸闷##Symptom 10##m 余年##m ,##x 再发##ext_freq 1##m 月##m 。##x'
-            # line = '腹胀、纳差4天，胸闷1天\t腹胀##Symptom 、##x 纳差##Symptom 4##m 天##n ，##x 胸闷##Symptom 1##m 天##n'
-            # line = '反复胸闷40余年，再发伴头晕1周。	反复##ext_freq 胸闷##Symptom 40##m 余年##m ，##x 再发##ext_freq 伴##x 头晕##Symptom 1##m 周##nr 。##x'
-
-            # line = '反复胸闷、胸痛2月余，再发加重半天。	反复##ext_freq 胸闷##Symptom 、##x 胸痛##Symptom 2##m 月##m 余##m ，##x 再发##ext_freq 加重##ext_intensity 半天##m 。##x'
-            # line = '心肺复苏术后5小时。	心肺复苏术##Surgery 后##t 5##m 小##a 时##ng 。##x '
-            # line = '四肢乏力伴精神行为异常1天。	四肢##Bodypart 乏力##Symptom 伴##x 精神行为异常##Symptom 1##m 天##n 。##x'
-            # line = '胸痛伴心悸3天。	胸痛##Symptom 伴##x 心悸##Symptom 3##m 天##n 。##x '
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
             if prog_zaifa.search(origin) is not None:
                 input = input.replace('再发##ext_freq', '，##x 再发##ext_freq')
             all_results = parse_one_input(input=input)
 
             View.visualize(origin, all_results, mode='non-void')
-
-
         except:
             pass
 
@@ -168,21 +159,22 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
     if '伴##x' in douhao_sentence:
         # 2.1 解析伴后面的内容，
         accompany_sentence = douhao_sentence.split('伴##x')[-1]  # 伴后面的内容
-        extension = Extension.get_extension(sentence=accompany_sentence)
-        accom_result = []
-        if '、##x' in accompany_sentence or accompany_sentence.count('##Symptom') > 1:
-            # 伴随症状至少两个
-            accom_result = parse_dunhao_sentence(douhao_sentence=accompany_sentence)
-        else:
-            # 只有一个伴随症状
-            words = accompany_sentence.split('##Symptom')
-            symptom = words[0].split()[-1]
-            tmp = {'symptom': symptom, 'duration': duration}
-            tmp.update(extension)
-            accom_result.append(tmp)
-        # 2.2 加入主Symptom
-        for item in result:
-            item.update({"accompany": accom_result})
+        if '##Symptom' in accompany_sentence:  # 伴后面要有symptom 才考虑伴随
+            extension = Extension.get_extension(sentence=accompany_sentence)
+            accom_result = []
+            if '、##x' in accompany_sentence or accompany_sentence.count('##Symptom') > 1:
+                # 伴随症状至少两个
+                accom_result = parse_dunhao_sentence(douhao_sentence=accompany_sentence)
+            else:
+                # 只有一个伴随症状
+                words = accompany_sentence.split('##Symptom')
+                symptom = words[0].split()[-1]
+                tmp = {'symptom': symptom, 'duration': duration}
+                tmp.update(extension)
+                accom_result.append(tmp)
+            # 2.2 加入主Symptom
+            for item in result:
+                item.update({"accompany": accom_result})
 
     return result
 
@@ -219,7 +211,7 @@ def parse_dunhao_sentence(douhao_sentence):
 if __name__ == '__main__':
     print(PROJECT_PATH)
 
-    txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/main_0602.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/0603.txt')
     # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
 
     # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')

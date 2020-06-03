@@ -14,14 +14,19 @@ from config import PROJECT_PATH
 from utils.duration import Duration
 from utils.extension import Extension
 from utils.visualize import View
-from utils.grammar import is_begin_with_no_accompany
+from utils.grammar import is_begin_with_no_accompany, is_totally_useless
+
+from chief_complaint.main_quick_analyze import parse_general_douhao_sentence, parse_dunhao_sentence
 
 import os
+import re
+
+prog_zaifa = re.compile('[^，]再发')
 
 
 def load_txt(txt_path):
     """
-    e.g. /Users/dengyang/PycharmProjects/cdss/data/cur_medical_segment.txt
+    e.g. /Users/dengyang/PycharmProjects/cdss/data/main_complaint_segment.txt
     """
     # 1. 按行load文件
     lines_num = -1
@@ -32,26 +37,21 @@ def load_txt(txt_path):
     print("load samples from %s ... ..." % txt_path)
     for i in range(int(lines_num)):
         line = sample_f.readline()
-
-        # line = '缘患者于10余年前出现头晕，主要以头顶部不适感为主，不伴眩晕，不伴视物模糊，不伴肢体乏力，	 缘##n 患者##n 于##p 10##m 余年##m 前##f 出现##v 头晕##Symptom ，##x 主要##b 以##p 头顶##Disease 部##x 不适##Symptom 感为##v 主##b ，##x 不##d 伴##v 眩晕##Symptom ，##x 不##d 伴##v 视物模糊##Symptom ，##x 不##d 伴##v 肢体##Bodypart 乏力##Symptom '
-
         line = line.strip('\n').strip()
         line = line.replace(',', '，')
+        line = line.replace('；', '。')
         if line == '':
             continue
         try:
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
+            if prog_zaifa.search(origin) is not None:
+                input = input.replace('再发##ext_freq', '，##x 再发##ext_freq')
             all_results = parse_one_input(input=input)
-            # print(i)
-            # print(origin, '\n\t')
-            # for k, item in enumerate(all_results):
-            #     print('第%d个句号句子:' % k)
-            #     for key, value in item.items():
-            #         print('\t', key, value)
-            # print('\n\n')
-            View.visualize(origin, all_results)
+
+            View.visualize(origin, all_results, mode='non-void')
         except:
             pass
+
 
 
 def parse_one_input(input):
@@ -87,15 +87,13 @@ def parse_douhao_sentence(index, douhao_sentence, results):
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
     :return:
     """
-    # 1. 有顿号的逗号句子（一定有多个Symptom），且没有伴
-    # if '、##x' in douhao_sentence and '伴##x' not in douhao_sentence:
-    #     results[index] = parse_dunhao_sentence(douhao_sentence=douhao_sentence)
+    if is_totally_useless(sentence=douhao_sentence):
+        results[index] = []  # 这句话没有有效词，就空吧
 
-    if is_begin_with_no_accompany(sentence=douhao_sentence):  # 现病史里面的场景
+    elif is_begin_with_no_accompany(sentence=douhao_sentence):  # 现病史里面的场景
         results[index] = []  # 内容都写到了上一个逗号句子里了
         parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results)
 
-    # 2. 没有顿号
     else:
         results[index] = parse_general_douhao_sentence(index=index,
                                                        douhao_sentence=douhao_sentence,
@@ -136,95 +134,12 @@ def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results):
             break
 
 
-def parse_general_douhao_sentence(index, douhao_sentence, results):
-    """
-    1）有伴随
-    2）无伴随
-    :param douhao_sentence:
-    :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
-    :return: new 了一个句号句子的result[], 返回
-    """
-    # 1. 先找该逗号句子的主Symptom（可能多个）
-    result = []  # [dict, ..., dict]
-    duration = Duration.get_duration_re(sentence=douhao_sentence)
-    extension = Extension.get_extension(sentence=douhao_sentence)
-    accom_before = douhao_sentence.split('伴##x')[0]  # 如果没有'伴##x' 也ok
-    # 1.1 找到'伴'前面的主Symptom，可能没有就要往前找
-    if '##Symptom' in accom_before:
-        # # 没有顿号的情况下，应该只有一个症状
-        # words = accom_before.split('##Symptom')
-        # symptom = words[0].split()[-1]
-        # tmp = {'symptom': symptom,
-        #        "target": '自身',
-        #        'duration': duration}
-        # tmp.update(extension)
-        # result.append(tmp)  # TODO 要改
-
-        result = parse_dunhao_sentence(douhao_sentence=accom_before)
-        for dict_ in result:
-            if not dict_['duration']:
-                dict_['duration'] = duration
-
-    else:
-        # 这个逗号句子没有Symptom
-        try:
-            for k in range(len(results[index - 1])):
-                symptom = results[index - 1][k]['symptom']  # k 代表之前那句话有多少个Symptom
-                tmp = {'symptom': symptom,
-                       "target": '自身',
-                       'duration': duration}
-                tmp.update(extension)
-                result.append(tmp)
-        except (ValueError, KeyError) as e:
-            pass
-
-    # 2. 如果有伴随
-    if '伴##x' in douhao_sentence:
-        # 2.1 解析伴后面的内容，
-        accompany_sentence = douhao_sentence.split('伴##x')[-1]  # 伴后面的内容
-        extension = Extension.get_extension(sentence=accompany_sentence)
-        accom_result = []
-        if '、##x' in accompany_sentence or accompany_sentence.count('##Symptom') > 1:
-            # 伴随症状至少两个
-            accom_result = parse_dunhao_sentence(douhao_sentence=accompany_sentence)
-        else:
-            # 只有一个伴随症状
-            words = accompany_sentence.split('##Symptom')
-            symptom = words[0].split()[-1]
-            tmp = {'symptom': symptom, 'duration': duration}
-            tmp.update(extension)
-            accom_result.append(tmp)
-        # 2.2 加入主Symptom
-        for item in result:
-            item.update({"accompany": accom_result})
-
-    return result
-
-
-def parse_dunhao_sentence(douhao_sentence):
-    """
-    有`顿号`的逗号句子里面默认应该是有Symptom的
-    且至少两个Symptom
-    :return:  这句逗号句子的多个json
-    """
-    tmp_result = []  # [dict, dict]
-    s_count = douhao_sentence.count('##Symptom')
-    duration = Duration.get_duration_re(sentence=douhao_sentence)
-    extension = Extension.get_extension(sentence=douhao_sentence)
-    for item in douhao_sentence.split(' '):
-        if '##Symptom' in item:
-            symptom = item.split('##')[0]
-            tmp = {"symptom": symptom,
-                   "target": '自身',
-                   "duration": duration}
-            tmp.update(extension)
-            tmp_result.append(tmp)
-    return tmp_result
-
-
 if __name__ == '__main__':
     print(PROJECT_PATH)
-    txt_path = os.path.join(PROJECT_PATH, 'data/cur_medical_segment.txt')
-    txt_path = os.path.join(PROJECT_PATH, 'data/test_case/cur_medical_segment_test_cl_0601.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_v2.txt')
+    # txt_path = os.path.join(PROJECT_PATH, 'data/test_case/cur_medical_segment_test_cl_0601.txt')
+
+    txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/0603.txt')
+
 
     load_txt(txt_path=txt_path)
