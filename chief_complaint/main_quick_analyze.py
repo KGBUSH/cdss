@@ -37,6 +37,7 @@ import os
 import re
 
 prog_zaifa = re.compile('[^，]再发')
+prog_banjiazhong = re.compile('[^再发][^伴|并]加重')
 
 def load_txt(txt_path):
     """
@@ -60,6 +61,8 @@ def load_txt(txt_path):
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
             if prog_zaifa.search(origin) is not None:
                 input = input.replace('再发##ext_freq', '，##x 再发##ext_freq')
+            if prog_banjiazhong.search(origin) is not None:
+                input = input.replace('加重##ext_intensity', '，##x 加重##ext_intensity')
             all_results = parse_one_input(input=input)
 
             View.visualize(origin, all_results, mode='non-void')
@@ -115,8 +118,7 @@ def parse_douhao_sentence(index, douhao_sentence, results):
 
 def parse_general_douhao_sentence(index, douhao_sentence, results):
     """
-    1）有伴随
-    2）无伴随
+    有伴随 => 无伴随
     :param douhao_sentence:
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
     :return: new 了一个句号句子的result[], 返回
@@ -128,16 +130,7 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
     accom_before = douhao_sentence.split('伴##x')[0]  # 如果没有'伴##x' 也ok
     # 1.1 找到'伴'前面的主Symptom，可能没有就要往前找
     if '##Symptom' in accom_before or '##Disease' in accom_before:
-        # # 没有顿号的情况下，应该只有一个症状
-        # words = accom_before.split('##Symptom')
-        # symptom = words[0].split()[-1]
-        # tmp = {'symptom': symptom,
-        #        "target": '自身',
-        #        'duration': duration}
-        # tmp.update(extension)
-        # result.append(tmp)  # TODO 要改
-
-        result = parse_dunhao_sentence(douhao_sentence=accom_before)
+        result = parse_basic_douhao_sentence(douhao_sentence=accom_before)
         for dict_ in result:
             if not dict_['duration']:
                 dict_['duration'] = duration
@@ -159,19 +152,13 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
     if '伴##x' in douhao_sentence:
         # 2.1 解析伴后面的内容，
         accompany_sentence = douhao_sentence.split('伴##x')[-1]  # 伴后面的内容
-        if '##Symptom' in accompany_sentence:  # 伴后面要有symptom 才考虑伴随
+        if '##Symptom' in accompany_sentence or '##Disease' in accompany_sentence:  # 伴后面要有symptom 才考虑伴随
             extension = Extension.get_extension(sentence=accompany_sentence)
             accom_result = []
-            if '、##x' in accompany_sentence or accompany_sentence.count('##Symptom') > 1:
+            if '、##x' in accompany_sentence or accompany_sentence.count('##Symptom') > 1 \
+                    or accompany_sentence.count('##Disease') > 1:
                 # 伴随症状至少两个
-                accom_result = parse_dunhao_sentence(douhao_sentence=accompany_sentence)
-            else:
-                # 只有一个伴随症状
-                words = accompany_sentence.split('##Symptom')
-                symptom = words[0].split()[-1]
-                tmp = {'symptom': symptom, 'duration': duration}
-                tmp.update(extension)
-                accom_result.append(tmp)
+                accom_result = parse_basic_douhao_sentence(douhao_sentence=accompany_sentence)
             # 2.2 加入主Symptom
             for item in result:
                 item.update({"accompany": accom_result})
@@ -179,14 +166,13 @@ def parse_general_douhao_sentence(index, douhao_sentence, results):
     return result
 
 
-def parse_dunhao_sentence(douhao_sentence):
+def parse_basic_douhao_sentence(douhao_sentence):
     """
-    有`顿号`的逗号句子里面默认应该是有Symptom的
-    且至少两个Symptom
+    处理一般的逗号句子，但是里面可以有顿号。
+    一般的逗号句子： 没有伴随、保证句子里至少有一个主体
     :return:  这句逗号句子的多个json
     """
     tmp_result = []  # [dict, dict]
-    s_count = douhao_sentence.count('##Symptom')
     duration = Duration.get_duration_re(sentence=douhao_sentence)
     extension = Extension.get_extension(sentence=douhao_sentence)
     for item in douhao_sentence.split(' '):
