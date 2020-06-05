@@ -38,14 +38,13 @@ from config import PROJECT_PATH
 from utils.duration import Duration
 from utils.extension import Extension
 from utils.visualize import View
-from utils.grammar import is_begin_with_no_accompany, is_totally_useless
-
+from utils.grammar import is_begin_with_no_accompany, is_totally_useless, is_begin_with_location
+from utils.grammar import prog_banjiazhong, prog_zaifa
 
 import os
 import re
+import numpy as np
 
-prog_zaifa = re.compile('[^，]再发')
-prog_banjiazhong = re.compile('[^再发][^伴|并]加重')
 
 def load_txt(txt_path):
     """
@@ -111,17 +110,50 @@ def parse_douhao_sentence(index, douhao_sentence, results):
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
     :return:
     """
-    if is_totally_useless(sentence=douhao_sentence):
-        results[index] = []  # 这句话没有有效词，就空吧
+    if is_begin_with_location(sentence=douhao_sentence):  # "，位于心前区，"
+        results[index] = []
+        parse_douhao_sentence_begin_location(index, douhao_sentence, results)
 
     elif is_begin_with_no_accompany(sentence=douhao_sentence):  # 现病史里面的场景
         results[index] = []  # 内容都写到了上一个逗号句子里了
         parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results)
 
+    elif is_totally_useless(sentence=douhao_sentence):
+        results[index] = []  # 这句话没有有效词，就空吧
+
     else:
         results[index] = parse_general_douhao_sentence(index=index,
                                                        douhao_sentence=douhao_sentence,
                                                        results=results)
+
+
+def parse_douhao_sentence_begin_location(index, douhao_sentence, results):
+    """
+    逗号句子以`位于`开头：
+    e.g. 位于心前区，
+    :param index:
+    :param douhao_sentence:
+    :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
+    :return: None 结果写入前面的句子result里
+    """
+    # 1. 找到 Bodypart 是什么
+    flag = '##Bodypart'
+    after_sentence = douhao_sentence.split('位于##v')[-1].strip()
+    body_part_list = []
+    for str_ in after_sentence.split():
+        if flag in str_:
+            body_part_list.append(str_.split(flag)[0])
+
+    len_mark = list(map(len, body_part_list))  # 每个结果的长度， [3, 9]
+    select = body_part_list[np.argmax(len_mark)]
+
+    # 2. 放到前面的逗号句子的result中
+    for i in range(index - 1, -1, -1):
+        if len(results[i]) > 0:  # 这个逗号句子result有东西
+            for dict_ in results[i]:
+                dict_['part'] = select
+            break
+
 
 
 def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results):
@@ -132,9 +164,9 @@ def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results):
     :param index:
     :param douhao_sentence:
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
-    :return:
+    :return: None 结果写入前面的句子result里
     """
-    after_sentence = douhao_sentence.split('不##d 伴##v')[-1]
+    after_sentence = douhao_sentence.split('不##d 伴##v')[-1].strip()
     # 有没有顿号，区分开
     if '、##x' in after_sentence:
         accom_result = parse_basic_douhao_sentence(douhao_sentence=after_sentence)  # 这里可能提取不到时间
@@ -142,25 +174,24 @@ def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results):
         accom_result = parse_general_douhao_sentence(index=index, douhao_sentence=after_sentence, results=results)
 
     # 1. 返回的是个[dict, dict], 要迭代把里面的exist全部改成'无'
-    for item in accom_result:
-        item['exist'] = '无'
+    for dict_ in accom_result:
+        dict_['exist'] = '无'
 
     # 2. 对上一个逗号句子的每一个Symptom添加伴随
     for i in range(index - 1, -1, -1):
-        if len(results[i]) == 0:
-            continue
-        else:
-            for item in results[i]:
-                if 'accompany' in item.keys() and item['accompany']:
-                    item['accompany'].extend(accom_result)
+        if len(results[i]) > 0:
+            for dict_ in results[i]:
+                if 'accompany' in dict_.keys() and dict_['accompany']:
+                    dict_['accompany'].extend(accom_result)
                 else:
-                    item['accompany'] = accom_result
+                    dict_['accompany'] = accom_result
             break
 
 
 def parse_general_douhao_sentence(index, douhao_sentence, results):
     """
-    有伴随 => 无伴随
+    1 先找主实体
+    2 再找是否有伴随
     :param douhao_sentence:
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
     :return: new 了一个句号句子的result[], 返回
@@ -234,10 +265,17 @@ def parse_basic_douhao_sentence(douhao_sentence):
 
 if __name__ == '__main__':
     print(PROJECT_PATH)
-    txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_v2.txt')
-    # txt_path = os.path.join(PROJECT_PATH, 'data/test_case/cur_medical_segment_test_cl_0601.txt')
 
-    txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/0603.txt')
+    # 现病史
+    txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_6_4.txt')
 
+    # # 主诉
+    # txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')
+
+    # test_case
+    txt_path = os.path.join(PROJECT_PATH, 'data/test_case/0605.txt')
+
+    # bad_case
+    # txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/0603.txt')
 
     load_txt(txt_path=txt_path)

@@ -6,6 +6,12 @@ from config import PROJECT_PATH
 一些语法判断 func
 """
 from utils.duration import Duration
+import re
+
+prog_zaifa = re.compile('[^，]再发')
+prog_banjiazhong = re.compile('[^再发][^伴|并]加重')
+
+
 
 
 def is_begin_with_no_accompany(sentence):
@@ -36,6 +42,18 @@ def is_totally_useless(sentence):
         return True
     else:
         return False
+
+
+def is_begin_with_location(sentence):
+    """
+    缘患者于10天前无明显诱因出现活动后气促，伴胸闷，不伴胸痛，`位于心前区`，呈轻度压迫感
+    一个逗号句子以"位于开头"
+    :param sentence:
+    :return:
+    """
+    if sentence.strip().startswith('位于##v'):
+        return True
+    return False
 
 
 def conbine_similar_terms(input):

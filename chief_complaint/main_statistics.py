@@ -172,7 +172,7 @@ def statistics_efficient_percent_format(txt_path):
 
 if __name__ == '__main__':
     print(PROJECT_PATH)
-    txt_path = os.path.join(PROJECT_PATH, 'data/data_main/main_complaint_v2.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')
     # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
 
     # statistics_efficient_percent(txt_path=txt_path)

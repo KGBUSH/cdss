@@ -9,15 +9,17 @@ class View:
         :param mode: full时展示所有维度
                      non-void时仅显示非空的维度
         """
-        print("原始句子：")
-        print('\t', origin)
-        print("维度提取结果：")
+        print("## 原始句子：")
+        origin_list = origin.split('。')
+        for i, str_ in enumerate(origin_list):
+            print('\t', '第%d句: ' % i, str_)
+        print("## 维度提取结果：")
         for i, dict_ in enumerate(results):
             print('第%d个句号句子' % i)
             for key, value in dict_.items():
                 print('  第%d:%d个逗号句子' % (i, key))
                 parse_decode_value(value, mode=mode)
-        print('\n')
+        print('\n\n\n')
 
 
 def parse_decode_value(value, mode='full'):
