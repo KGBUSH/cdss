@@ -10,6 +10,8 @@
 1 `现病史`中有多少分词实体被识别出来了， 目前跑下来结果是
 2 哪些是目前的`无用`词
 
+
+@todo: 这个统计recall的方法还是不够准
 """
 
 from config import PROJECT_PATH
@@ -59,8 +61,7 @@ def update_useless_word(l, all_results, input):
         if cut.split('##')[0] not in tmp_all_results:
             l.append(cut)
             if cut == '心悸##Symptom':
-                aaa=1
-
+                aaa = 1
 
 
 def statistics_efficient_percent(txt_path):
@@ -106,11 +107,12 @@ def statistics_efficient_percent(txt_path):
 
 if __name__ == '__main__':
     print(PROJECT_PATH)
-    txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_v2.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_6_4.txt')
     # txt_path = os.path.join(PROJECT_PATH, 'data/test_case_cl.txt')
 
     # statistics_efficient_percent(txt_path=txt_path)
 
     # 钟博的那种格式
     from chief_complaint.main_statistics import statistics_efficient_percent_format
+
     statistics_efficient_percent_format(txt_path=txt_path)
