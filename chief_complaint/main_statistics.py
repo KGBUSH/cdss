@@ -14,7 +14,7 @@
 
 from config import PROJECT_PATH
 import os
-from chief_complaint.main_quick_analyze import parse_one_input
+from rule_analyze_v1 import parse_one_input
 
 from collections import Counter
 
