@@ -12,17 +12,33 @@ import numpy as np
 prog_zaifa = re.compile('[^，]再发')
 prog_banjiazhong = re.compile('[^再发][^伴|并]加重')
 
+negative_words = ['否', '未', '不', '无']
 
-def is_begin_with_no_accompany(sentence):
+
+def is_have_negative_word(sentence):
     """
-    e.g. 无伴出汗、胸闷、气促，
+    是否有否定词汇
     :param sentence:
-    :return:
+    :return: bool
+    """
+    for str_ in negative_words:
+        if str_ in sentence:
+            return True
+    return False
+
+
+def is_begin_about_accompany(sentence):
+    """
+    positive: e.g. 伴有心悸
+    negative: e.g. 无伴出汗、胸闷、气促，
+    :param sentence:
+    :return: bool
     """
     if sentence.strip().startswith('不##d 伴##v') \
             or sentence.strip().startswith('无##d 伴##v') \
             or sentence.strip().startswith('无伴##v') \
-            or sentence.strip().startswith('不伴##v'):
+            or sentence.strip().startswith('不伴##v') \
+            or sentence.strip().startswith('伴'):
         return True
     return False
 
@@ -31,7 +47,7 @@ def is_totally_useless(sentence):
     """
     什么有效信息都没有，（目前只考虑Symptom，Disease，还有duration，duration要自己去提取）
     :param sentence:
-    :return:
+    :return: bool
     """
     duration = Duration.get_duration_re(sentence=sentence)
 
@@ -48,7 +64,7 @@ def is_begin_with_location(sentence):
     缘患者于10天前无明显诱因出现活动后气促，伴胸闷，不伴胸痛，`位于心前区`，呈轻度压迫感
     一个逗号句子以"位于开头"
     :param sentence:
-    :return:
+    :return: bool
     """
     if sentence.strip().startswith('位于##v'):
         return True
@@ -126,6 +142,17 @@ def conbine_similar_terms(input):
     return " ".join(items)
 
 
+def is_basic_info_status_related_sentence(sentence):
+    """
+    判断是否是处理basicInfo的句子
+    :param sentence:
+    :return: bool
+    """
+    if '##BasicInfo' in sentence and '##Status' in sentence:
+        return True
+    return False
+
+
 if __name__ == '__main__':
 
     txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')
@@ -145,4 +172,3 @@ if __name__ == '__main__':
     x = conbine_similar_terms(input)
     print(x)
     '''
-

@@ -38,8 +38,9 @@ from config import PROJECT_PATH
 from utils.duration import Duration
 from utils.extension import Extension
 from utils.visualize import View
-from utils.grammar import is_begin_with_no_accompany, is_totally_useless, is_begin_with_location, conbine_similar_terms
+from utils.grammar import *
 from utils.grammar import prog_banjiazhong, prog_zaifa
+from utils.pre_processing import pre_for_basic_info_status
 
 
 import os
@@ -111,15 +112,25 @@ def parse_douhao_sentence(index, douhao_sentence, results):
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
     :return:
     """
-    douhao_sentence = conbine_similar_terms(douhao_sentence)
+    # 1. 针对逗号句子的预处理
+    douhao_sentence = conbine_similar_terms(input=douhao_sentence)
+    douhao_sentence = pre_for_basic_info_status(douhao_sentence=douhao_sentence)
 
+    # 2. rules总入口
     if is_begin_with_location(sentence=douhao_sentence):  # "，位于心前区，"
         results[index] = []
         parse_douhao_sentence_begin_location(index, douhao_sentence, results)
 
-    elif is_begin_with_no_accompany(sentence=douhao_sentence):  # 现病史里面的场景
+    elif is_begin_about_accompany(sentence=douhao_sentence):
         results[index] = []  # 内容都写到了上一个逗号句子里了
-        parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results)
+        if is_have_negative_word(sentence=douhao_sentence):  # 无伴的情况
+            parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results, exist='无')
+        else:
+            parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results)
+
+    elif is_basic_info_status_related_sentence(sentence=douhao_sentence):
+        # basicInfo
+        results[index] = parse_basic_info_sentence(douhao_sentence=douhao_sentence)
 
     elif is_totally_useless(sentence=douhao_sentence):
         results[index] = []  # 这句话没有有效词，就空吧
@@ -158,18 +169,19 @@ def parse_douhao_sentence_begin_location(index, douhao_sentence, results):
             break
 
 
-
-def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results):
+def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results, exist='有'):
     """
     逗号句子以`不伴`开头：
     e.g. 不伴有气促、头晕，
          不伴有冷汗，
+
     :param index:
     :param douhao_sentence:
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
+    :param exist: 不伴还是伴
     :return: None 结果写入前面的句子result里
     """
-    after_sentence = douhao_sentence.split('不##d 伴##v')[-1].strip()
+    after_sentence = douhao_sentence.split('伴')[-1].strip()
     # 有没有顿号，区分开
     if '、##x' in after_sentence:
         accom_result = parse_basic_douhao_sentence(douhao_sentence=after_sentence)  # 这里可能提取不到时间
@@ -178,7 +190,7 @@ def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results):
 
     # 1. 返回的是个[dict, dict], 要迭代把里面的exist全部改成'无'
     for dict_ in accom_result:
-        dict_['exist'] = '无'
+        dict_['exist'] = exist
 
     # 2. 对上一个逗号句子的每一个Symptom添加伴随
     for i in range(index - 1, -1, -1):
@@ -266,6 +278,27 @@ def parse_basic_douhao_sentence(douhao_sentence):
     return tmp_result
 
 
+def parse_basic_info_sentence(douhao_sentence):
+    """
+    前提：必须要有 basicInfo + status
+    :param douhao_sentence: 
+    :return: 
+    """
+    tmp_result = []
+    status = None
+    for str_ in douhao_sentence.split():
+        if '##Status' in str_:
+            status = str_.split('##Status')[0]
+            break
+
+    for str_ in douhao_sentence.split():
+        if '##BasicInfo' in str_:
+            tmp_result.append({'basicInfo': str_.split('##BasicInfo')[0], 'status': status})
+    return tmp_result
+
+
+
+
 if __name__ == '__main__':
     print(PROJECT_PATH)
 
@@ -276,7 +309,7 @@ if __name__ == '__main__':
     # txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')
 
     # test_case
-    txt_path = os.path.join(PROJECT_PATH, 'data/test_case/cur_medical_segment_test_cl_0601.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/test_case/0605.txt')
 
     # bad_case
     # txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/0603.txt')
