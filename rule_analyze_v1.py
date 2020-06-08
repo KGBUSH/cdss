@@ -117,9 +117,6 @@ def parse_douhao_sentence(index, douhao_sentence, results):
         results[index] = []
         parse_douhao_sentence_begin_location(index, douhao_sentence, results)
 
-    if is_totally_useless(sentence=douhao_sentence):
-        results[index] = []  # 这句话没有有效词，就空吧
-
     elif is_begin_with_no_accompany(sentence=douhao_sentence):  # 现病史里面的场景
         results[index] = []  # 内容都写到了上一个逗号句子里了
         parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results)
