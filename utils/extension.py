@@ -6,8 +6,7 @@ import re
 """
 
 # 类似1次，算作频率
-prog_ci = re.compile('([一二三四五六七八九十]*|([0-9]*)?|多)?(次)')
-
+prog_ci = re.compile('([一二三四五六七八九十]*|([0-9]*)?(-[0-9]*)?|多)?(次)')
 
 class Extension(object):
 
@@ -20,7 +19,7 @@ class Extension(object):
         exist = '无' if '无##x' in sentence else '有'
         frequency = _get_frequency(sentence, invalid)
 
-        color = invalid  # 颜色
+        color = sentence.split('##ext_color')[0].split()[-1] if '##ext_color' in sentence else invalid  # 颜色
         property_ = invalid  # 触感
         premise = sentence.split('##ext_premise')[0].split()[-1] if '##ext_premise' in sentence else invalid
 
