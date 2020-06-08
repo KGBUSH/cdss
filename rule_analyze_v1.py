@@ -270,13 +270,13 @@ if __name__ == '__main__':
     print(PROJECT_PATH)
 
     # 现病史
-    txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_6_4.txt')
+    # txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_v2.txt')
 
     # # 主诉
     # txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')
 
     # test_case
-    txt_path = os.path.join(PROJECT_PATH, 'data/test_case/0605.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/test_case/cur_medical_segment_test_cl_0601.txt')
 
     # bad_case
     # txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/0603.txt')

@@ -7,11 +7,10 @@ from config import PROJECT_PATH
 """
 from utils.duration import Duration
 import re
+import numpy as np
 
 prog_zaifa = re.compile('[^，]再发')
 prog_banjiazhong = re.compile('[^再发][^伴|并]加重')
-
-
 
 
 def is_begin_with_no_accompany(sentence):
@@ -37,7 +36,7 @@ def is_totally_useless(sentence):
     duration = Duration.get_duration_re(sentence=sentence)
 
     if 'Symptom' not in sentence \
-            and 'Disease' not in sentence\
+            and 'Disease' not in sentence \
             and not duration:
         return True
     else:
@@ -56,6 +55,31 @@ def is_begin_with_location(sentence):
     return False
 
 
+def longest_common_substring(str1, str2):
+    """
+    获得两个字符串的最长子串
+    """
+    str1_length = len(str1)  # 获取第一个字符串的长度
+    str2_length = len(str2)  # 获取第二个字符串的长度
+    record = np.zeros(shape=(str1_length, str2_length),dtype=int)
+    maxLen = 0  # 最大长度
+    maxEnd = 0  # 结束的索引
+
+    for i in range(str1_length):
+        for j in range(str2_length):
+            if str1[i] == str2[j]:  # 判断两个字符串对应的索引是否相同
+                if i == 0 or j == 0:    # 判断是否是第一行或者是第一列
+                    record[i][j] = 1    # 如果是则对应索引置一
+                else:   # 如果不是对应的索引则为其左上角对应的元素加一
+                    record[i][j] = record[i - 1][j - 1] + 1
+            else:   # 如果字符串对应的元素不相同则置零
+                record[i][j] = 0
+            if record[i][j] > maxLen:   # 判断记录数值是否大于最大长度
+                maxLen = record[i][j]
+                maxEnd = i  # 将结束索引置为i
+    return str1[maxEnd - maxLen + 1: maxEnd + 1]
+
+
 def conbine_similar_terms(input):
     """
     合并同类项
@@ -67,14 +91,14 @@ def conbine_similar_terms(input):
     i = 0
     while i < l:
         candid = items[i]
-        j = i+1 if i+1 < l else -1
+        j = i + 1 if i + 1 < l else -1
         if j == -1:
             break
         # 如果下一个词的词性和当前的一致
         if items[j].split('##')[-1] == candid.split('##')[-1]:
             word1 = candid.split('##')[0]
             word2 = items[j].split('##')[0]
-            common = ''.join(set(word1).intersection(set(word2)))
+            common = longest_common_substring(word1, word2)
             words = ''
             # 有相同的部分
             if len(common) > 0:
@@ -88,12 +112,12 @@ def conbine_similar_terms(input):
                 else:
                     idx1 = word1.index(common)
                     idx2 = word2.index(common)
-                    words = word1[0:idx1] + common + word2[idx2+len(common):]
+                    words = word1[0:idx1] + common + word2[idx2 + len(common):]
             # 没有相同的部分
             else:
                 words = word1 + word2
             semantic = items[j].split('##')[-1]
-            items[i] = words[:]+'##'+semantic
+            items[i] = words[:] + '##' + semantic
             del items[j]
             l -= 1
             i -= 1
@@ -103,18 +127,22 @@ def conbine_similar_terms(input):
 
 
 if __name__ == '__main__':
-    '''
+
     txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')
     with open(txt_path, 'r', encoding='utf-8') as f:
         data = f.readlines()
     for line in data:
         origin, input = line.split('\t')
-        try:
-            conbine_similar_terms(input)
-        except:
-            print(origin)
-            print(input)
-    '''
+        print(conbine_similar_terms(input))
+
+    '''  
+    str1 = '左上腹'
+    str2 = '部'
+    lcs = longest_common_substring(str1, str2)
+    print(lcs)
+    
     input = '左上腹##Bodypart 上腹##Bodypart 上腹部##Bodypart 腹部##Bodypart 疼痛##Symptom 5##m +##x 小##a 时##ng 。##x'
     x = conbine_similar_terms(input)
     print(x)
+    '''
+
