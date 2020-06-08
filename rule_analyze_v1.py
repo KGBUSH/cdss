@@ -38,8 +38,9 @@ from config import PROJECT_PATH
 from utils.duration import Duration
 from utils.extension import Extension
 from utils.visualize import View
-from utils.grammar import is_begin_with_no_accompany, is_totally_useless, is_begin_with_location
+from utils.grammar import is_begin_with_no_accompany, is_totally_useless, is_begin_with_location, conbine_similar_terms
 from utils.grammar import prog_banjiazhong, prog_zaifa
+
 
 import os
 import re
@@ -110,9 +111,14 @@ def parse_douhao_sentence(index, douhao_sentence, results):
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
     :return:
     """
+    douhao_sentence = conbine_similar_terms(douhao_sentence)
+
     if is_begin_with_location(sentence=douhao_sentence):  # "，位于心前区，"
         results[index] = []
         parse_douhao_sentence_begin_location(index, douhao_sentence, results)
+
+    if is_totally_useless(sentence=douhao_sentence):
+        results[index] = []  # 这句话没有有效词，就空吧
 
     elif is_begin_with_no_accompany(sentence=douhao_sentence):  # 现病史里面的场景
         results[index] = []  # 内容都写到了上一个逗号句子里了

@@ -57,15 +57,21 @@ def is_begin_with_location(sentence):
 
 
 def conbine_similar_terms(input):
+    """
+    合并同类项
+    input是分词后的句子
+    """
     items = input.split(' ')
-    new_items = []
+
     l = len(items)
     i = 0
     while i < l:
         candid = items[i]
-        j = i+1 if i+1 < l else l-1
+        j = i+1 if i+1 < l else -1
+        if j == -1:
+            break
         # 如果下一个词的词性和当前的一致
-        if items[j].split('##')[-1] == candid.split('##')[-1] :
+        if items[j].split('##')[-1] == candid.split('##')[-1]:
             word1 = candid.split('##')[0]
             word2 = items[j].split('##')[0]
             common = ''.join(set(word1).intersection(set(word2)))
@@ -80,15 +86,9 @@ def conbine_similar_terms(input):
                     words = word1
                 # 相同的部分是word1后半部和word2前半部
                 else:
-                    # 如果相同部分不相连，会出事
-                    # e.g 左胸疼痛 和 左胸痛
-                    try:
-                        idx1 = word1.index(common)
-                        idx2 = word2.index(common)
-                        words = word1[0:idx1] + common + word2[idx2+len(common):]
-                    except:
-                        words = word1 + word2
-
+                    idx1 = word1.index(common)
+                    idx2 = word2.index(common)
+                    words = word1[0:idx1] + common + word2[idx2+len(common):]
             # 没有相同的部分
             else:
                 words = word1 + word2
@@ -103,9 +103,18 @@ def conbine_similar_terms(input):
 
 
 if __name__ == '__main__':
+    '''
     txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')
     with open(txt_path, 'r', encoding='utf-8') as f:
         data = f.readlines()
     for line in data:
         origin, input = line.split('\t')
-        print(conbine_similar_terms(input))
+        try:
+            conbine_similar_terms(input)
+        except:
+            print(origin)
+            print(input)
+    '''
+    input = '左上腹##Bodypart 上腹##Bodypart 上腹部##Bodypart 腹部##Bodypart 疼痛##Symptom 5##m +##x 小##a 时##ng 。##x'
+    x = conbine_similar_terms(input)
+    print(x)
