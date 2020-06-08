@@ -4,17 +4,6 @@ import re
 """
 duration提取
 """
-duration_rules = {
-    '##m 余年##m': '余年',
-    '##m 年##m 余##m': '年余',
-    '##m 年##m': '年',
-    '半年##m': '半年',
-
-    '##m 月##m': '月',
-    '##m 周##nr': '周',
-    '##m 天##n': '天',
-    '##m 小##a 时##ng': '小时'
-}
 
 time_nomalize = {
     '天': 24,
@@ -26,8 +15,7 @@ time_nomalize = {
 digit_dict = {"零": 0, "一": 1, "二": 2, "两": 2, "俩": 2, "三": 3,
               "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9}
 
-
-prog = re.compile('([一二三四五六七八九十]|(([0-9]*)\.)?([0-9]*)(\+|余)?|半|多|数)?(个)?(月|天|小时|年|周|分钟)(半|余)?')
+prog = re.compile('(近|约)?([一二三四五六七八九十]|(([0-9]*)\.)?([0-9]*)(\+|余)?|半|多|数)?(个)?(月|天|小时|年|周|分钟)(半|余)?')
 
 
 class Duration(object):
@@ -51,26 +39,6 @@ class Duration(object):
                 duration = duration[:idx] + duration[idx + 1:] + '+'
         return duration
 
-    @staticmethod
-    def get_duration(sentence):
-        """
-        v1.0 版本获取时间
-        :param sentence:
-        :return:
-        """
-        flag = None
-        for key in duration_rules.keys():
-            if key in sentence:
-                flag = key
-                break
-        if flag is None:
-            return ''
-
-        # 如果能找到
-        if flag == '半年##m':
-            return '半年'
-        num = sentence.split(flag)[0].split(' ')[-1]  # 拿到数字
-        return str(num) + duration_rules[flag]
 
     @staticmethod
     def normalize_time(duration):
