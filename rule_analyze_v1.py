@@ -287,6 +287,7 @@ def parse_basic_douhao_sentence(douhao_sentence):
     tmp_result = []  # [dict, dict]
     duration = Duration.get_duration_re(sentence=douhao_sentence)
     extension = Extension.get_extension(sentence=douhao_sentence)
+    status = Extension.get_disease_extension(sentence=douhao_sentence)
     for item in douhao_sentence.split(' '):
         if '##Symptom' in item:
             symptom = item.split('##')[0]
@@ -300,7 +301,9 @@ def parse_basic_douhao_sentence(douhao_sentence):
             disease = item.split('##')[0]
             tmp = {"disease": disease,
                    "target": '自身',
+                   "status": status,
                    "duration": duration}
+
             tmp_result.append(tmp)
 
     return tmp_result
