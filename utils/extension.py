@@ -7,6 +7,7 @@ import re
 
 # 类似1次，算作频率
 prog_ci = re.compile('([一二三四五六七八九十]*|([0-9]*)?(-[0-9]*)?|多)?(次)')
+prog_status = re.compile('[考虑|拟|我科|住院|诊断|入院|]')
 
 
 class Extension(object):
@@ -36,6 +37,27 @@ class Extension(object):
                 'premise': premise,
                 'scope': scope,
                 'smell': smell}
+
+    @staticmethod
+    def get_disease_extension(sentence):
+        """
+        考虑 + disease
+        拟 + disease + 收入我科
+        disease + 入住我科
+        以 + d + 收住院
+        d + 收住院
+        以 + d + 收住我科
+        诊断为 + d + 转入我科
+        诊断 + d
+        以 + d + 收入院
+        :param sentence:
+        :return:
+        """
+        if '##Disease' not in sentence:
+            return ''
+        idx = prog_status.search(sentence)
+        if idx:
+            return '入院原因'
 
 
 def _get_frequency(sentence, invalid):
