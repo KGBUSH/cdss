@@ -8,6 +8,7 @@ import re
 # 类似1次，算作频率
 prog_ci = re.compile('([一二三四五六七八九十]*|([0-9]*)?(-[0-9]*)?|多)?(次)')
 
+
 class Extension(object):
 
     @staticmethod

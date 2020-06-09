@@ -140,12 +140,13 @@ def statistics_efficient_percent_format(txt_path):
             # 第二列
             col2 = ''  # 第二列内容
             col4 = 0  # 有效词个数
+            col6 = ''  # 有效词列出来
             for str_ in input.split(' '):
                 word = str_.split('##')[0]
                 if word in str_all_results:
                     col4 += 1
-                    col2 += str_
-                    col2 += ' '
+                    col2 += str_ + ' '
+                    col6 += word + ' '
 
             # 第三列 总个数
             col3 = count_total_cut_word(input)
@@ -160,14 +161,16 @@ def statistics_efficient_percent_format(txt_path):
             out_print += col2 + p
             out_print += str(col3) + p
             out_print += str(col4) + p
-            out_print += str(col5 * 100) + '%'
+            out_print += str(col5 * 100) + '%' + p
+            out_print += '有效提取词：' + col6 + p
+            out_print += '原始句子：' + origin
             print(out_print)
 
             count_cut_word += col3  # 这段话总词个数
             count_valid += col4  # 有效词个数
         except:
             pass
-    print('汇总：', count_cut_word, count_valid, float(count_valid) / count_cut_word)
+    print('汇总如下：', count_cut_word, count_valid, float(count_valid) / count_cut_word)
 
 
 if __name__ == '__main__':
