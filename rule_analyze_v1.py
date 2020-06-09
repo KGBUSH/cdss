@@ -40,8 +40,7 @@ from utils.extension import Extension
 from utils.visualize import View
 from utils.grammar import *
 from utils.grammar import prog_banjiazhong, prog_zaifa
-from utils.pre_processing import pre_for_basic_info_status
-
+from utils.pre_processing import *
 
 import os
 import re
@@ -68,8 +67,6 @@ def load_txt(txt_path):
             continue
         try:
             origin, input = line.split('\t')[0], line.split('\t')[-1]  # 真正的input是分好词的，（line的后面一部分）
-            if prog_zaifa.search(origin) is not None:
-                input = input.replace('再发##ext_freq', '，##x 再发##ext_freq')
             if prog_banjiazhong.search(origin) is not None:
                 input = input.replace('加重##ext_intensity', '，##x 加重##ext_intensity')
             all_results = parse_one_input(input=input)
@@ -99,12 +96,12 @@ def parse_one_input(input):
         douhao_list = sentence.split('，##x')
         for i in range(len(douhao_list)):
             douhao_sentence = douhao_list[i]
-            parse_douhao_sentence(index=i, douhao_sentence=douhao_sentence, results=results)
+            parse_douhao_sentence_entrance(index=i, douhao_sentence=douhao_sentence, results=results)
         all_results.append(results)
     return all_results
 
 
-def parse_douhao_sentence(index, douhao_sentence, results):
+def parse_douhao_sentence_entrance(index, douhao_sentence, results):
     """
     逗号句子总入口
     :param index: 这是这个句号句子里面的第几个逗号句子
@@ -115,11 +112,16 @@ def parse_douhao_sentence(index, douhao_sentence, results):
     # 1. 针对逗号句子的预处理
     douhao_sentence = conbine_similar_terms(input=douhao_sentence)
     douhao_sentence = pre_for_basic_info_status(douhao_sentence=douhao_sentence)
+    douhao_sentence = pre_for_zaifa(douhao_sentence=douhao_sentence)
 
     # 2. rules总入口
     if is_begin_with_location(sentence=douhao_sentence):  # "，位于心前区，"
         results[index] = []
         parse_douhao_sentence_begin_location(index, douhao_sentence, results)
+
+    elif is_with_scope(sentence=douhao_sentence):
+        results[index] = []
+        parse_douhao_sentence_with_scope(index, douhao_sentence, results)
 
     elif is_begin_about_accompany(sentence=douhao_sentence):
         results[index] = []  # 内容都写到了上一个逗号句子里了
@@ -139,6 +141,33 @@ def parse_douhao_sentence(index, douhao_sentence, results):
         results[index] = parse_general_douhao_sentence(index=index,
                                                        douhao_sentence=douhao_sentence,
                                                        results=results)
+
+
+def parse_douhao_sentence_with_scope(index, douhao_sentence, results):
+    """
+    处理逗号句子里面有范围的
+    ##x 范围##n 约##d 巴##j 掌大##j 小##n
+    :param index:
+    :param douhao_sentence:
+    :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
+    :return: None
+    """
+    # 1. 找到 范围后面的内容
+    content = douhao_sentence.split('范围##n')[-1]
+    origin_content = ''
+    for str_ in content.split():
+        origin_content += str_.split('##')[0]
+
+    # 2. 找到前面的result且exist不为无
+    find_flag = False
+    for i in range(index - 1, -1, -1):
+        if find_flag:
+            break
+        if len(results[i]) > 0:  # 这个逗号句子result有东西
+            for dict_ in results[i]:
+                if dict_['exist'] == '有':
+                    find_flag = True
+                    dict_['scope'] = origin_content
 
 
 def parse_douhao_sentence_begin_location(index, douhao_sentence, results):
@@ -174,7 +203,6 @@ def parse_douhao_sentence_begin_not_accompany(index, douhao_sentence, results, e
     逗号句子以`不伴`开头：
     e.g. 不伴有气促、头晕，
          不伴有冷汗，
-
     :param index:
     :param douhao_sentence:
     :param results: 句号句子层面，# {0:[dict,dict], 1:[]}  # 0, 1代表第几个逗号句子
@@ -297,13 +325,11 @@ def parse_basic_info_sentence(douhao_sentence):
     return tmp_result
 
 
-
-
 if __name__ == '__main__':
     print(PROJECT_PATH)
 
     # 现病史
-    # txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_v2.txt')
+    txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_6_4.txt')
 
     # # 主诉
     # txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')

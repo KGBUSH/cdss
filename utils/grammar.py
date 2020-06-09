@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-import os
-from config import PROJECT_PATH
-
 """
 一些语法判断 func
 """
+
+
+import os
+from config import PROJECT_PATH
+
 from utils.duration import Duration
 import re
 import numpy as np
@@ -67,6 +69,18 @@ def is_begin_with_location(sentence):
     :return: bool
     """
     if sentence.strip().startswith('位于##v'):
+        return True
+    return False
+
+
+def is_with_scope(sentence):
+    """
+    胸骨后压迫感，`范围`约巴掌大小，无放射性疼痛，
+    不一定是要在逗号句子的开头
+    :param sentence:
+    :return:
+    """
+    if '范围##n' in sentence:
         return True
     return False
 
