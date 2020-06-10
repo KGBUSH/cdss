@@ -26,6 +26,8 @@ class View:
         print("##### 维度提取结果：")
         for i, dict_ in enumerate(results):
             print('第%d个句号句子' % i)
+            print(origin_list[i])
+            print(input_list[i])
             for key, value in dict_.items():
                 print('  第%d:%d个逗号句子' % (i, key))
                 parse_decode_value(value, mode=mode)

@@ -303,7 +303,6 @@ def parse_basic_douhao_sentence(douhao_sentence):
                    "target": '自身',
                    "status": status,
                    "duration": duration}
-
             tmp_result.append(tmp)
 
     return tmp_result
@@ -332,7 +331,7 @@ if __name__ == '__main__':
     print(PROJECT_PATH)
 
     # 现病史
-    txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_6_4.txt')
+    # txt_path = os.path.join(PROJECT_PATH, 'data/data_cur/cur_medical_6_4.txt')
 
     # # 主诉
     # txt_path = os.path.join(PROJECT_PATH, 'data/data_main/chief_complaint_6_4.txt')
