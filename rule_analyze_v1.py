@@ -71,7 +71,7 @@ def load_txt(txt_path):
                 input = input.replace('加重##ext_intensity', '，##x 加重##ext_intensity')
             all_results = parse_one_input(input=input)
 
-            View.visualize(origin, all_results, mode='non-void')
+            View.visualize(origin, input, all_results, mode='non-void')
         except:
             pass
 
