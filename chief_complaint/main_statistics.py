@@ -17,6 +17,7 @@ import os
 from rule_analyze_v1 import parse_one_input
 
 from collections import Counter
+import datetime
 
 
 def count_total_cut_word(input):
@@ -170,6 +171,10 @@ def statistics_efficient_percent_format(txt_path):
             count_valid += col4  # 有效词个数
         except:
             pass
+
+    time_stamp = datetime.datetime.now()
+
+    print("时间 " + time_stamp.strftime('%Y.%m.%d-%H:%M:%S'))
     print('汇总如下：', count_cut_word, count_valid, float(count_valid) / count_cut_word)
 
 

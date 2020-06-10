@@ -1,19 +1,29 @@
 class View:
 
     @staticmethod
-    def visualize(origin, results, mode='full'):
+    def visualize(origin, input, results, mode='full'):
         """
         使用缩进等，便于展示维度提取结果。
         :param origin: 原始句子
+        :param input
         :param results: 维度提取结果 [dict, dict]
         :param mode: full时展示所有维度
                      non-void时仅显示非空的维度
         """
-        print("## 原始句子：")
+        # 1. 打印原始句子
+        print("##### 原始句子：")
         origin_list = origin.split('。')
         for i, str_ in enumerate(origin_list):
             print('\t', '第%d句: ' % i, str_)
-        print("## 维度提取结果：")
+
+        # 2. 打印分词结果
+        print("##### 分词结果：")
+        input_list = input.strip().strip('。##x').split('。##x')  # 先把最后的句号删了，再split by 句号
+        for i, str_ in enumerate(input_list):
+            print('\t', '第%d句: ' % i, str_)
+
+        # 3. 打印维度提取词
+        print("##### 维度提取结果：")
         for i, dict_ in enumerate(results):
             print('第%d个句号句子' % i)
             for key, value in dict_.items():
