@@ -18,7 +18,7 @@ class Extension(object):
         invalid = ''
         intensity = sentence.split('##ext_intensity')[0].split()[-1] if '##ext_intensity' in sentence else invalid
         part = sentence.split('##Bodypart')[0].split()[-1] if '##Bodypart' in sentence else invalid
-        exist = '无' if '无##x' in sentence else '有'
+        exist = '无' if '无##' in sentence else '有'
         frequency = _get_frequency(sentence, invalid)
 
         color = sentence.split('##ext_color')[0].split()[-1] if '##ext_color' in sentence else invalid  # 颜色
