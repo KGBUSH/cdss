@@ -119,6 +119,10 @@ def parse_douhao_sentence_entrance(index, douhao_sentence, results):
         results[index] = []
         parse_douhao_sentence_begin_location(index, douhao_sentence, results)
 
+    elif is_begin_with_keep_time(sentence=douhao_sentence):
+        results[index] = []
+        parse_douhao_sentence_with_keep_time(index, douhao_sentence, results)
+
     elif is_with_scope(sentence=douhao_sentence):
         results[index] = []
         parse_douhao_sentence_with_scope(index, douhao_sentence, results)
@@ -141,6 +145,31 @@ def parse_douhao_sentence_entrance(index, douhao_sentence, results):
         results[index] = parse_general_douhao_sentence(index=index,
                                                        douhao_sentence=douhao_sentence,
                                                        results=results)
+
+
+def parse_douhao_sentence_with_keep_time(index, douhao_sentence, results):
+    """
+    处理逗号句子里面是，持续...开头的
+    ##x 持续##vd 约##d 数分钟##m
+    :param index:
+    :param douhao_sentence:
+    :param results:
+    :return:
+    """
+    # 1. 找到 范围后面的内容
+    content = douhao_sentence.split('持续##vd')[-1]
+    duration = Duration.get_duration_re(sentence=content)
+
+    # 2. 找到前面的result且exist不为无
+    find_flag = False
+    for i in range(index - 1, -1, -1):
+        if find_flag:
+            break
+        if len(results[i]) > 0:  # 这个逗号句子result有东西
+            for dict_ in results[i]:
+                if dict_['exist'] == '有':
+                    find_flag = True
+                    dict_['keep_duration'] = duration
 
 
 def parse_douhao_sentence_with_scope(index, douhao_sentence, results):
