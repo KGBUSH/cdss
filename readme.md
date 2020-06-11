@@ -1,4 +1,4 @@
-## 总入口
+# 总入口
 
 **rule_analyze_v1.py  一键运行**
 
@@ -13,7 +13,7 @@
 
 
 
-## 目录结构说明
+# 目录结构说明
 
 /data: 数据。包含现病史，主诉，以及testcase
 
@@ -30,3 +30,10 @@
 5. visualize.py  _打印_
 6. parse.py  _rules实现细节_
 
+
+
+# 备注
+**rules的思维导图**在 document/思维导图cdss-0611.emmx。打开浏览器 [链接](https://mm.edrawsoft.cn/files)，然后导入：
+
+
+![image](http://note.youdao.com/yws/res/17000/C5A2C9A65FE1458D824B4E11BBB4749C)
