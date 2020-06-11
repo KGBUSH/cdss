@@ -3,6 +3,18 @@ from utils.grammar import prog_zaifa
 from utils.duration import Duration
 
 
+def pre_for_paragraph(line):
+    """
+    整段文字的预处理
+    :param line:
+    :return:
+    """
+    line = line.strip('\n').strip()
+    line = line.replace(',', '，')
+    line = line.replace('；', '。')
+    return line
+
+
 def pre_for_basic_info_status(douhao_sentence):
     """
     精神##BasicInfo 可##x -> 这种情况下吧##x替换成##Status
@@ -24,7 +36,7 @@ def pre_for_zaifa(douhao_sentence):
     if prog_zaifa.search(douhao_sentence):
         tmp_list = douhao_sentence.split('再发')
         for str_ in tmp_list:
-            duration = Duration.get_duration_re(sentence=douhao_sentence)
+            duration = Duration.get_duration_re(sentence=str_)
             if not duration:
                 cut_flag = False  # 只要前后有一个分句没有duration就不能cut
 

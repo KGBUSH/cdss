@@ -3,7 +3,6 @@
 一些语法判断 func
 """
 
-
 import os
 from config import PROJECT_PATH
 
@@ -73,6 +72,17 @@ def is_begin_with_location(sentence):
     return False
 
 
+def is_begin_with_keep_time(sentence):
+    """
+    位于心前区，约巴掌大小，`持续`约5分钟，休息后可缓解，
+    :param sentence:
+    :return:
+    """
+    if sentence.strip().startswith('持续##vd'):
+        return True
+    return False
+
+
 def is_with_scope(sentence):
     """
     胸骨后压迫感，`范围`约巴掌大小，无放射性疼痛，
@@ -91,20 +101,20 @@ def longest_common_substring(str1, str2):
     """
     str1_length = len(str1)  # 获取第一个字符串的长度
     str2_length = len(str2)  # 获取第二个字符串的长度
-    record = np.zeros(shape=(str1_length, str2_length),dtype=int)
+    record = np.zeros(shape=(str1_length, str2_length), dtype=int)
     maxLen = 0  # 最大长度
     maxEnd = 0  # 结束的索引
 
     for i in range(str1_length):
         for j in range(str2_length):
             if str1[i] == str2[j]:  # 判断两个字符串对应的索引是否相同
-                if i == 0 or j == 0:    # 判断是否是第一行或者是第一列
-                    record[i][j] = 1    # 如果是则对应索引置一
-                else:   # 如果不是对应的索引则为其左上角对应的元素加一
+                if i == 0 or j == 0:  # 判断是否是第一行或者是第一列
+                    record[i][j] = 1  # 如果是则对应索引置一
+                else:  # 如果不是对应的索引则为其左上角对应的元素加一
                     record[i][j] = record[i - 1][j - 1] + 1
-            else:   # 如果字符串对应的元素不相同则置零
+            else:  # 如果字符串对应的元素不相同则置零
                 record[i][j] = 0
-            if record[i][j] > maxLen:   # 判断记录数值是否大于最大长度
+            if record[i][j] > maxLen:  # 判断记录数值是否大于最大长度
                 maxLen = record[i][j]
                 maxEnd = i  # 将结束索引置为i
     return str1[maxEnd - maxLen + 1: maxEnd + 1]
