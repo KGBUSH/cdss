@@ -114,6 +114,10 @@ def parse_douhao_sentence_entrance(index, douhao_sentence, results):
         results[index] = []
         parse_douhao_sentence_begin_location(index, douhao_sentence, results)
 
+    elif is_begin_with_keep_time(sentence=douhao_sentence):
+        results[index] = []
+        parse_douhao_sentence_with_keep_time(index, douhao_sentence, results)
+
     elif is_with_scope(sentence=douhao_sentence):
         results[index] = []
         parse_douhao_sentence_with_scope(index, douhao_sentence, results)
