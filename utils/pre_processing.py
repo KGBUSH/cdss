@@ -36,7 +36,7 @@ def pre_for_zaifa(douhao_sentence):
     if prog_zaifa.search(douhao_sentence):
         tmp_list = douhao_sentence.split('再发')
         for str_ in tmp_list:
-            duration = Duration.get_duration_re(sentence=douhao_sentence)
+            duration = Duration.get_duration_re(sentence=str_)
             if not duration:
                 cut_flag = False  # 只要前后有一个分句没有duration就不能cut
 
