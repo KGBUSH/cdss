@@ -3,6 +3,18 @@ from utils.grammar import prog_zaifa
 from utils.duration import Duration
 
 
+def pre_for_paragraph(line):
+    """
+    整段文字的预处理
+    :param line:
+    :return:
+    """
+    line = line.strip('\n').strip()
+    line = line.replace(',', '，')
+    line = line.replace('；', '。')
+    return line
+
+
 def pre_for_basic_info_status(douhao_sentence):
     """
     精神##BasicInfo 可##x -> 这种情况下吧##x替换成##Status
