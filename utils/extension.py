@@ -18,7 +18,8 @@ class Extension(object):
         invalid = ''
         intensity = sentence.split('##ext_intensity')[0].split()[-1] if '##ext_intensity' in sentence else invalid
         part = sentence.split('##Bodypart')[0].split()[-1] if '##Bodypart' in sentence else invalid
-        exist = '无' if '无##' in sentence else '有'
+        exist = _get_exist(sentence, invalid)
+
         frequency = _get_frequency(sentence, invalid)
 
         color = sentence.split('##ext_color')[0].split()[-1] if '##ext_color' in sentence else invalid  # 颜色
@@ -63,7 +64,6 @@ class Extension(object):
 def _get_frequency(sentence, invalid):
 
     frequency = sentence.split('##ext_freq')[0].split()[-1] if '##ext_freq' in sentence else invalid
-
     words = sentence.split()
     s = ''
     for word in words:
@@ -74,3 +74,15 @@ def _get_frequency(sentence, invalid):
         return frequency + freq
     else:
         return frequency
+
+
+def _get_exist(sentence, invalid):
+
+    exist = '无' if "无##" in sentence else '有'
+    words = sentence.split()
+    s = ''
+    for word in words:
+        s += word.split('##')[0]
+    if '无明显诱因' in s:
+        exist = '有'
+    return exist
