@@ -28,12 +28,14 @@
 3. grammar.py  _语法判断_
 4. pre_processing.py  _预处理_
 5. visualize.py  _打印_
-6. parse.py  _rules实现细节_
+6. parse.py  _rules实现细节各函数_
 
 
 
 # 备注
-**rules的思维导图**在 document/思维导图cdss-0611.emmx。打开浏览器 [链接](https://mm.edrawsoft.cn/files)，然后导入：
+**rules的思维导图**在 `PROJ_ROOT/document/思维导图cdss-0611.emmx`。
+打开浏览器 [链接](https://mm.edrawsoft.cn/files)，
+然后导入`思维导图cdss-0611.emmx`这个文件可在网页查看、编辑思维导图：
 
 
 ![image](http://note.youdao.com/yws/res/17000/C5A2C9A65FE1458D824B4E11BBB4749C)
