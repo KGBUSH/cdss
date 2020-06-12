@@ -44,7 +44,7 @@ from utils.parse import *
 import os
 
 
-def run(txt_path):
+def main(txt_path):
     """
     e.g. /Users/dengyang/PycharmProjects/cdss/data/main_complaint_segment.txt
     """
@@ -157,4 +157,4 @@ if __name__ == '__main__':
     # bad_case
     # txt_path = os.path.join(PROJECT_PATH, 'data/bad_case/0603.txt')
 
-    run(txt_path=txt_path)
+    main(txt_path=txt_path)
